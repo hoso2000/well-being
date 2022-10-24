@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         var taskChecked: Int
         var rewardChecked: Int
 
-        //readData(date)
+        readData(date)
 
         // 日付を取得
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
