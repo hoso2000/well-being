@@ -79,21 +79,24 @@ class MainActivity : AppCompatActivity() {
             null
         )
         //現状はリストの後ろまでfor文で回して最新のタスクを表示させるよう仮置き
-        cursor.moveToFirst()
+        if (cursor.count != 0) {
+            cursor.moveToFirst()
 //        val sbuilder = StringBuilder()
-        for (i in 0 until cursor.count -1) {
-//            sbuilder.append(cursor.getString(0))
-//            sbuilder.append(": ")
-//            sbuilder.append(cursor.getString(1))
-//            sbuilder.append("\n")
-           cursor.moveToNext()
-        }
+            for (i in 0 until cursor.count - 1) {
+                //            sbuilder.append(cursor.getString(0))
+                //            sbuilder.append(": ")
+                //            sbuilder.append(cursor.getString(1))
+                //            sbuilder.append("\n")
+                cursor.moveToNext()
+            }
+
 
         // 忘れずに！　taskとやりたいことを挿入
-        val task:CheckBox = findViewById(R.id.task)
-        val reward:CheckBox = findViewById(R.id.reward)
-        task.text = cursor.getString(0)
-        reward.text = cursor.getString(1)
-        cursor.close()
+            val task:CheckBox = findViewById(R.id.task)
+            val reward:CheckBox = findViewById(R.id.reward)
+            task.text = cursor.getString(0)
+            reward.text = cursor.getString(1)
+            cursor.close()
+        }
     }
 }
