@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,11 +19,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val format = SimpleDateFormat("yyyy/MM/dd", Locale.US)
+        val calendarView:CalendarView = findViewById(R.id.calendarView)
+        val defaultDate = calendarView.date
+        var date = format.format(defaultDate)
+
         val task:CheckBox = findViewById(R.id.task)
         val reward:CheckBox = findViewById(R.id.reward)
         val btnSend:Button = findViewById(R.id.btnSend)
 
         readData()
+
+        // 日付を取得
+        calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            date = "$year/$month/$dayOfMonth"
+        }
 
         //タスクが終わったら褒めるアラート
         task.setOnCheckedChangeListener{ _, isChecked ->
@@ -48,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         //編集画面へ遷移
         btnSend.setOnClickListener {
             val intent = Intent(application, SubActivity::class.java)
+            intent.putExtra("DATE_KEY",date)
             startActivity(intent)
         }
     }
