@@ -1,6 +1,6 @@
 package com.example.kotlin_well_being
 
-import android.content.DialogInterface
+import android.content.ContentValues
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +28,10 @@ class MainActivity : AppCompatActivity() {
         val reward:CheckBox = findViewById(R.id.reward)
         val btnSend:Button = findViewById(R.id.btnSend)
 
-        readData(date)
+        var taskChecked: Int
+        var rewardChecked: Int
+
+        //readData(date)
 
         // 日付を取得
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
@@ -38,25 +41,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         //タスクが終わったら褒めるアラート
-        task.setOnCheckedChangeListener{ _, isChecked ->
-            if (isChecked) {
+        task.setOnClickListener{
+            if (task.isChecked) {
+                taskChecked = 1
                 AlertDialog.Builder(this)
                     .setTitle("お疲れ様")
                     .setMessage("よく頑張ったね")
                     .setNegativeButton("OK", null)
                     .show()
+            }else{
+                taskChecked = 0
             }
+            insertTaskChecker(db,date,taskChecked)
         }
 
         //ご褒美が終わったら褒めるアラート
-        reward.setOnCheckedChangeListener{ _, isChecked ->
-            if (isChecked) {
+        reward.setOnClickListener{
+            if (reward.isChecked) {
+                rewardChecked = 1
                 AlertDialog.Builder(this)
                     .setTitle("パーフェクト")
                     .setMessage("楽しい一日になったね！")
                     .setNegativeButton("OK", null)
                     .show()
+            }else{
+                rewardChecked = 0
             }
+            insertRewardChecker(db,date,rewardChecked)
         }
 
         //編集画面へ遷移
@@ -79,8 +90,11 @@ class MainActivity : AppCompatActivity() {
         task.text = "登録してください"
         reward.text = "登録してください"
 
+        var taskChecked = 0
+        var rewardChecked = 0
+
         val cursor = db.query(
-            "testdb", arrayOf("date", "task", "reward"),
+            "testdb", arrayOf("date", "task", "reward", "taskChecker", "rewardChecker"),
             null,
             null,
             null,
@@ -98,11 +112,31 @@ class MainActivity : AppCompatActivity() {
                     test.text = cursor.getString(0)
                     task.text = cursor.getString(1)
                     reward.text = cursor.getString(2)
+                    taskChecked = cursor.getInt(3)
+                    rewardChecked = cursor.getInt(4)
                     break
                 }
                 cursor.moveToNext()
             }
+            task.isChecked = taskChecked == 1
+            reward.isChecked = rewardChecked == 1
         }
         cursor.close()
+    }
+
+    private fun insertTaskChecker(db: SQLiteDatabase, dateData: String?, taskChecker: Int) {
+        val values = ContentValues()
+
+        values.put("taskChecker", taskChecker)
+        db.insert("testdb", null, values)
+        db.update("testdb", values, "date = ?", arrayOf(dateData))
+    }
+
+    private fun insertRewardChecker(db: SQLiteDatabase, dateData: String?, rewardChecker: Int) {
+        val values = ContentValues()
+
+        values.put("rewardChecker", rewardChecker)
+        db.insert("testdb", null, values)
+        db.update("testdb", values, "date = ?", arrayOf(dateData))
     }
 }

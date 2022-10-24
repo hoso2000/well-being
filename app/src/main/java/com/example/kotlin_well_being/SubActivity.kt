@@ -23,6 +23,8 @@ class SubActivity : AppCompatActivity() {
         val btnBack :Button = findViewById(R.id.btnBack)
         val et1 :EditText = findViewById(R.id.editText1)
         val et2 :EditText = findViewById(R.id.editText2)
+        val isChecked = 0
+        val isChecked2 = 0
 
         // 日付を取得
         val getDate = intent.getStringExtra("DATE_KEY")
@@ -35,18 +37,20 @@ class SubActivity : AppCompatActivity() {
             val task = et1.text.toString()
             val reward = et2.text.toString()
             // 入力したテキストをSQLiteに登録
-            insertData(db,getDate, task,reward)
+            insertData(db,getDate,task,reward,isChecked,isChecked2)
             val intentBack = Intent(application, MainActivity::class.java)
             startActivity(intentBack)
         }
     }
 
     // SQLiteに登録
-    private fun insertData(db: SQLiteDatabase, dateData: String?, taskData: String, rewardData: String) {
+    private fun insertData(db: SQLiteDatabase, dateData: String?, taskData: String, rewardData: String, taskChecker: Int, rewardChecker: Int) {
         val values = ContentValues()
         values.put("date", dateData)
         values.put("task", taskData)
         values.put("reward", rewardData)
+        values.put("taskChecker", taskChecker)
+        values.put("rewardChecker", rewardChecker)
         db.insert("testdb", null, values)
         db.update("testdb", values, "date = ?", arrayOf(dateData))
     }
