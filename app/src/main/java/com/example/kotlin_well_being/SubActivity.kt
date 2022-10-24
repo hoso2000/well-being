@@ -1,6 +1,7 @@
 package com.example.kotlin_well_being
 
 import android.content.ContentValues
+import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -32,7 +33,12 @@ class SubActivity : AppCompatActivity() {
             val task = et1.text.toString()
             val reward = et2.text.toString()
             insertData(db,task,reward)
-            finish()
+            readData()
+            val intentBack = Intent(application, MainActivity::class.java)
+            //intentBack.putExtra("TASK_KEY",task)
+            startActivity(intentBack)
+            //intent.putExtra("REWARD_TEXT",reward)
+            //finish()
         }
     }
 
@@ -51,10 +57,10 @@ class SubActivity : AppCompatActivity() {
         cursor.moveToFirst()
         val sbuilder = StringBuilder()
         for (i in 0 until cursor.count) {
-            sbuilder.append(cursor.getString(0))
-            sbuilder.append(": ")
-            sbuilder.append(cursor.getString(1))
-            sbuilder.append("\n")
+//            sbuilder.append(cursor.getString(0))
+//            sbuilder.append(": ")
+//            sbuilder.append(cursor.getString(1))
+//            sbuilder.append("\n")
             cursor.moveToNext()
         }
 
