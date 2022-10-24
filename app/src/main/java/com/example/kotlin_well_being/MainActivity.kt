@@ -28,11 +28,13 @@ class MainActivity : AppCompatActivity() {
         val reward:CheckBox = findViewById(R.id.reward)
         val btnSend:Button = findViewById(R.id.btnSend)
 
-        readData()
+        readData(date)
 
         // 日付を取得
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            date = "$year/$month/$dayOfMonth"
+            var fixMonth = (month % 12) + 1
+            date = "$year/$fixMonth/$dayOfMonth"
+            readData(date)
         }
 
         //タスクが終わったら褒めるアラート
@@ -66,37 +68,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     // SQLiteのデータを読み込む
-    private fun readData() {
+    private fun readData(date: String) {
         helper = TestOpenHelper(applicationContext)
         db = helper.readableDatabase
 
+        val test:TextView = findViewById(R.id.testView)
+        val task:CheckBox = findViewById(R.id.task)
+        val reward:CheckBox = findViewById(R.id.reward)
+        test.text = date
+        task.text = "登録してください"
+        reward.text = "登録してください"
+
         val cursor = db.query(
-            "testdb", arrayOf("task", "reward"),
+            "testdb", arrayOf("date", "task", "reward"),
             null,
             null,
             null,
             null,
             null
         )
-        //現状はリストの後ろまでfor文で回して最新のタスクを表示させるよう仮置き
+        //初起動時DBの要素ゼロで実行されるのを防止するため
         if (cursor.count != 0) {
             cursor.moveToFirst()
-//        val sbuilder = StringBuilder()
-            for (i in 0 until cursor.count - 1) {
-                //            sbuilder.append(cursor.getString(0))
-                //            sbuilder.append(": ")
-                //            sbuilder.append(cursor.getString(1))
-                //            sbuilder.append("\n")
+            //データベース内を探索
+            for (i in 0 until cursor.count ) {
+                // 同じ日付を見つけたら呼び出して、終了
+                if(cursor.getString(0) == date){
+                    //　taskとやりたいことを挿入
+                    test.text = cursor.getString(0)
+                    task.text = cursor.getString(1)
+                    reward.text = cursor.getString(2)
+                    break
+                }
                 cursor.moveToNext()
             }
-
-
-        // 忘れずに！　taskとやりたいことを挿入
-            val task:CheckBox = findViewById(R.id.task)
-            val reward:CheckBox = findViewById(R.id.reward)
-            task.text = cursor.getString(0)
-            reward.text = cursor.getString(1)
-            cursor.close()
         }
+        cursor.close()
     }
 }

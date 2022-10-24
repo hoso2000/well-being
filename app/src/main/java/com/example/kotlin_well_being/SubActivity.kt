@@ -35,20 +35,19 @@ class SubActivity : AppCompatActivity() {
             val task = et1.text.toString()
             val reward = et2.text.toString()
             // 入力したテキストをSQLiteに登録
-            insertData(db,task,reward)
+            insertData(db,getDate, task,reward)
             val intentBack = Intent(application, MainActivity::class.java)
-            //intentBack.putExtra("TASK_KEY",task)
             startActivity(intentBack)
-            //intent.putExtra("REWARD_TEXT",reward)
-            //finish()
         }
     }
 
     // SQLiteに登録
-    private fun insertData(db: SQLiteDatabase, taskData: String, rewardData: String) {
+    private fun insertData(db: SQLiteDatabase, dateData: String?, taskData: String, rewardData: String) {
         val values = ContentValues()
+        values.put("date", dateData)
         values.put("task", taskData)
         values.put("reward", rewardData)
         db.insert("testdb", null, values)
+        db.update("testdb", values, "date = ?", arrayOf(dateData))
     }
 }
