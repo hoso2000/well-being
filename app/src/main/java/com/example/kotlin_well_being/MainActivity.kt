@@ -31,13 +31,18 @@ class MainActivity : AppCompatActivity() {
         var taskChecked: Int
         var rewardChecked: Int
 
+        val taskMessage = arrayOf("よく頑張ったね","えらい","最高")
+        val rewardMessage = arrayOf("楽しい一日になったね","すてきな一日","パーフェクト")
+
         readData(date)
+        reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
 
         // 日付を取得
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             var fixMonth = (month % 12) + 1
             date = "$year/$fixMonth/$dayOfMonth"
             readData(date)
+            reward.isClickable = task.isChecked
         }
 
         //タスクが終わったら褒めるアラート
@@ -46,13 +51,14 @@ class MainActivity : AppCompatActivity() {
                 taskChecked = 1
                 AlertDialog.Builder(this)
                     .setTitle("お疲れ様")
-                    .setMessage("よく頑張ったね")
+                    .setMessage(taskMessage.random())
                     .setNegativeButton("OK", null)
                     .show()
             }else{
                 taskChecked = 0
             }
             insertTaskChecker(db,date,taskChecked)
+            reward.isClickable = task.isChecked
         }
 
         //ご褒美が終わったら褒めるアラート
@@ -61,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                 rewardChecked = 1
                 AlertDialog.Builder(this)
                     .setTitle("パーフェクト")
-                    .setMessage("楽しい一日になったね！")
+                    .setMessage(rewardMessage.random())
                     .setNegativeButton("OK", null)
                     .show()
             }else{
