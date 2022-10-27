@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,6 +34,8 @@ class MainActivity : AppCompatActivity() {
 
         val taskMessage = arrayOf("よく頑張ったね","えらい","最高")
         val rewardMessage = arrayOf("楽しい一日になったね","すてきな一日","パーフェクト")
+        val image = ImageView(this)
+        image.setImageResource(R.drawable.good1)
 
         readData(date)
         reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
@@ -49,11 +52,13 @@ class MainActivity : AppCompatActivity() {
         task.setOnClickListener{
             if (task.isChecked) {
                 taskChecked = 1
-                AlertDialog.Builder(this)
-                    .setTitle("お疲れ様")
-                    .setMessage(taskMessage.random())
-                    .setNegativeButton("OK", null)
-                    .show()
+                AlertDialog.Builder(this).apply {
+                    setTitle("お疲れ様")
+                    setMessage(taskMessage.random())
+                    //setView(image)
+                    setNegativeButton("OK",null)
+                    show()
+                }
             }else{
                 taskChecked = 0
             }
@@ -130,6 +135,7 @@ class MainActivity : AppCompatActivity() {
         cursor.close()
     }
 
+    // task checkboxを登録
     private fun insertTaskChecker(db: SQLiteDatabase, dateData: String?, taskChecker: Int) {
         val values = ContentValues()
 
@@ -138,6 +144,7 @@ class MainActivity : AppCompatActivity() {
         db.update("testdb", values, "date = ?", arrayOf(dateData))
     }
 
+    // reward checkboxを登録
     private fun insertRewardChecker(db: SQLiteDatabase, dateData: String?, rewardChecker: Int) {
         val values = ContentValues()
 
