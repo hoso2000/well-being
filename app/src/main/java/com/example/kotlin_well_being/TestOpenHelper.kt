@@ -35,12 +35,14 @@ class TestOpenHelper internal constructor(context: Context?) :
         private const val DATABASE_NAME = "DB.db"
         private const val TABLE_NAME = "testdb"
         private const val COLUMN_NAME_DATE = "date"
+        private const val COLUMN_NAME_GENRE = "genre"
         private const val COLUMN_NAME_TASK = "task"
         private const val COLUMN_NAME_REWARD = "reward"
         private const val COLUMN_NAME_TASKC = "taskChecker"
         private const val COLUMN_NAME_REWARDC = "rewardChecker"
         private const val SQL_CREATE_ENTRIES = "CREATE TABLE " + TABLE_NAME + " (" +
                 COLUMN_NAME_DATE + " TEXT PRIMARY KEY," +
+                COLUMN_NAME_GENRE + " GENRE," +
                 COLUMN_NAME_TASK + " TEXT," +
                 COLUMN_NAME_REWARD + " TEXT," +
                 COLUMN_NAME_TASKC + " INTEGER," +

@@ -183,7 +183,7 @@ class MainActivity : AppCompatActivity() {
         var rewardChecked = 0
 
         val cursor = db.query(
-            "testdb", arrayOf("date", "task", "reward", "taskChecker", "rewardChecker"),
+            "testdb", arrayOf("date", "genre", "task", "reward", "taskChecker", "rewardChecker"),
             null,
             null,
             null,
@@ -199,10 +199,10 @@ class MainActivity : AppCompatActivity() {
                 if(cursor.getString(0) == date){
                     //　taskとやりたいことを挿入
                     test.text = cursor.getString(0)
-                    task.text = cursor.getString(1)
-                    reward.text = cursor.getString(2)
-                    taskChecked = cursor.getInt(3)
-                    rewardChecked = cursor.getInt(4)
+                    task.text = cursor.getString(1) + "　" + cursor.getString(2)
+                    reward.text = cursor.getString(3)
+                    taskChecked = cursor.getInt(4)
+                    rewardChecked = cursor.getInt(5)
                     break
                 }
                 cursor.moveToNext()
