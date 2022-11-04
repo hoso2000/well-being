@@ -3,6 +3,7 @@ package com.example.kotlin_well_being
 import android.content.ContentValues
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
@@ -20,10 +21,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // カレンダー関連
         val format = SimpleDateFormat("yyyy/MM/dd", Locale.US)
         val calendarView:CalendarView = findViewById(R.id.calendarView)
         val defaultDate = calendarView.date
         var date = format.format(defaultDate)
+        calendarView.setFocusedMonthDateColor(Color.BLUE)
 
         val task:CheckBox = findViewById(R.id.task)
         val reward:CheckBox = findViewById(R.id.reward)
@@ -32,10 +35,11 @@ class MainActivity : AppCompatActivity() {
         var taskChecked: Int
         var rewardChecked: Int
 
+        // alertのランダムで表示されるメッセージと画像の配列
         val taskMessage = arrayOf("よく頑張ったね","えらい","最高")
         val rewardMessage = arrayOf("楽しい一日になったね","すてきな一日","パーフェクト")
-        val image = ImageView(this)
-        image.setImageResource(R.drawable.good1)
+        val taskImage = arrayOf(R.drawable.good1,R.drawable.good2)
+        val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2)
 
         readData(date)
         reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
@@ -52,10 +56,12 @@ class MainActivity : AppCompatActivity() {
         task.setOnClickListener{
             if (task.isChecked) {
                 taskChecked = 1
+                val image = ImageView(this)
+                image.setImageResource(taskImage.random())
                 AlertDialog.Builder(this).apply {
                     setTitle("お疲れ様")
                     setMessage(taskMessage.random())
-                    //setView(image)
+                    setView(image)
                     setNegativeButton("OK",null)
                     show()
                 }
@@ -70,9 +76,12 @@ class MainActivity : AppCompatActivity() {
         reward.setOnClickListener{
             if (reward.isChecked) {
                 rewardChecked = 1
+                val image = ImageView(this)
+                image.setImageResource(rewardImage.random())
                 AlertDialog.Builder(this)
                     .setTitle("パーフェクト")
                     .setMessage(rewardMessage.random())
+                    .setView(image)
                     .setNegativeButton("OK", null)
                     .show()
             }else{
