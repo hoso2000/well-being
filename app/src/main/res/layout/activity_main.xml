@@ -11,11 +11,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:focusedMonthDateColor="@color/blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:focusedMonthDateColor="@color/blue"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/taskName"
@@ -47,7 +47,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="3dp"
         android:checked="false"
         android:text="登録してください"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,6 +82,16 @@
         android:text="TestView"
         app:layout_constraintEnd_toEndOf="@+id/taskName"
         app:layout_constraintTop_toTopOf="@+id/taskName" />
+
+    <Button
+        android:id="@+id/pushBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="26dp"
+        android:text="通知"
+        app:layout_constraintBottom_toBottomOf="@+id/rewardName"
+        app:layout_constraintEnd_toEndOf="@+id/rewardName" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

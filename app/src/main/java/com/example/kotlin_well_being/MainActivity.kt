@@ -1,13 +1,22 @@
 package com.example.kotlin_well_being
 
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.SystemClock
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,8 +50,37 @@ class MainActivity : AppCompatActivity() {
         val taskImage = arrayOf(R.drawable.good1,R.drawable.good2)
         val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2)
 
+        val CHANNEL_ID = "channel_id"
+        val channel_name = "channel_name"
+        val channel_description = "channel_description "
+        //val pushBtn:Button = findViewById(R.id.pushBtn)
+
         readData(date)
         reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
+
+        // 22時に表示されない
+        val alarmMgr: AlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmIntent: PendingIntent = Intent(this, AlarmReceiver::class.java).let { intent ->
+            PendingIntent.getBroadcast(this, 0, intent, 0)
+        }
+//        val calendar: Calendar = Calendar.getInstance().apply {
+//            timeInMillis = System.currentTimeMillis()
+//            set(Calendar.HOUR_OF_DAY, 17)
+//            //set(Calendar.MINUTE, 56)
+//        }
+//        alarmMgr.setInexactRepeating(
+//            AlarmManager.RTC_WAKEUP,
+//            calendar.timeInMillis,
+//            AlarmManager.INTERVAL_DAY,
+//            alarmIntent
+//        )
+        alarmMgr.setRepeating(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + 5 * 1000,
+            10 * 1000,
+            alarmIntent
+        )
+
 
         // 日付を取得
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
@@ -96,6 +134,37 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("DATE_KEY",date)
             startActivity(intent)
         }
+
+        // 通知の表示
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = channel_name
+            val descriptionText = channel_description
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            /// チャネルを登録
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        /// 通知の中身
+//        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+//            .setSmallIcon(R.drawable.ic_launcher_background)    /// 表示されるアイコン
+//            .setContentTitle("ハローkotlin!!")                  /// 通知タイトル
+//            .setContentText("今日も1日がんばるぞい!")           /// 通知コンテンツ
+//            .setPriority(NotificationCompat.PRIORITY_DEFAULT)   /// 通知の優先度
+//
+//
+//        var notificationId2 = 0   /// notificationID
+//        pushBtn.setOnClickListener {
+//            /// ボタンを押して通知を表示
+//            with(NotificationManagerCompat.from(this)) {
+//                notify(notificationId2, builder.build())
+//                notificationId2 += 1
+//            }
+//        }
     }
 
     // SQLiteのデータを読み込む
