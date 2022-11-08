@@ -8,16 +8,15 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
-import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,11 +30,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // カレンダー関連
-        val format = SimpleDateFormat("yyyy/MM/dd", Locale.US)
+        val format = SimpleDateFormat("yyyy/MM/d", Locale.US)
         val calendarView:CalendarView = findViewById(R.id.calendarView)
         val defaultDate = calendarView.date
         var date = format.format(defaultDate)
-        calendarView.setFocusedMonthDateColor(Color.BLUE)
 
         val task:CheckBox = findViewById(R.id.task)
         val reward:CheckBox = findViewById(R.id.reward)
@@ -47,26 +45,34 @@ class MainActivity : AppCompatActivity() {
         // alertのランダムで表示されるメッセージと画像の配列
         val taskMessage = arrayOf("よく頑張ったね","えらい","最高")
         val rewardMessage = arrayOf("楽しい一日になったね","すてきな一日","パーフェクト")
-        val taskImage = arrayOf(R.drawable.good1,R.drawable.good2)
-        val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2)
+        val taskImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
+        val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
 
+        // push通知関連
         val CHANNEL_ID = "channel_id"
         val channel_name = "channel_name"
         val channel_description = "channel_description "
-        //val pushBtn:Button = findViewById(R.id.pushBtn)
+        val pushBtn:Button = findViewById(R.id.pushBtn)
 
         readData(date)
         reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
+        backColor(task.isChecked, reward.isChecked)
 
         // 22時に表示されない
         val alarmMgr: AlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmIntent: PendingIntent = Intent(this, AlarmReceiver::class.java).let { intent ->
             PendingIntent.getBroadcast(this, 0, intent, 0)
         }
+        //各タスク用の通知
+        val alarmMgrTask: AlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, AlarmReceiverTask::class.java)
+        intent.putExtra("id",1)
+        val alarmIntentTask = PendingIntent.getBroadcast(this, 1, intent, 0)
+
 //        val calendar: Calendar = Calendar.getInstance().apply {
 //            timeInMillis = System.currentTimeMillis()
-//            set(Calendar.HOUR_OF_DAY, 17)
-//            //set(Calendar.MINUTE, 56)
+//            set(Calendar.HOUR_OF_DAY, 23)
+//            set(Calendar.MINUTE, 30)
 //        }
 //        alarmMgr.setInexactRepeating(
 //            AlarmManager.RTC_WAKEUP,
@@ -76,11 +82,16 @@ class MainActivity : AppCompatActivity() {
 //        )
         alarmMgr.setRepeating(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + 5 * 1000,
-            10 * 1000,
+            SystemClock.elapsedRealtime() + 1 * 1000,
+            3 * 1000,
             alarmIntent
         )
-
+        alarmMgrTask.setRepeating(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + 2 * 1000,
+            5 * 1000,
+            alarmIntentTask
+        )
 
         // 日付を取得
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
@@ -88,6 +99,7 @@ class MainActivity : AppCompatActivity() {
             date = "$year/$fixMonth/$dayOfMonth"
             readData(date)
             reward.isClickable = task.isChecked
+            backColor(task.isChecked, reward.isChecked)
         }
 
         //タスクが終わったら褒めるアラート
@@ -108,6 +120,7 @@ class MainActivity : AppCompatActivity() {
             }
             insertTaskChecker(db,date,taskChecked)
             reward.isClickable = task.isChecked
+            backColor(task.isChecked, reward.isChecked)
         }
 
         //ご褒美が終わったら褒めるアラート
@@ -126,6 +139,7 @@ class MainActivity : AppCompatActivity() {
                 rewardChecked = 0
             }
             insertRewardChecker(db,date,rewardChecked)
+            backColor(task.isChecked, reward.isChecked)
         }
 
         //編集画面へ遷移
@@ -150,21 +164,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         /// 通知の中身
-//        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-//            .setSmallIcon(R.drawable.ic_launcher_background)    /// 表示されるアイコン
-//            .setContentTitle("ハローkotlin!!")                  /// 通知タイトル
-//            .setContentText("今日も1日がんばるぞい!")           /// 通知コンテンツ
-//            .setPriority(NotificationCompat.PRIORITY_DEFAULT)   /// 通知の優先度
-//
-//
-//        var notificationId2 = 0   /// notificationID
-//        pushBtn.setOnClickListener {
-//            /// ボタンを押して通知を表示
-//            with(NotificationManagerCompat.from(this)) {
-//                notify(notificationId2, builder.build())
-//                notificationId2 += 1
-//            }
-//        }
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_background)    /// 表示されるアイコン
+            .setContentTitle("ボタンが押されました")                  /// 通知タイトル
+            .setContentText("テスト中")           /// 通知コンテンツ
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)   /// 通知の優先度
+
+
+        var notificationId2 = 0   /// notificationID
+        pushBtn.setOnClickListener {
+            /// ボタンを押して通知を表示
+            with(NotificationManagerCompat.from(this)) {
+                notify(notificationId2, builder.build())
+                notificationId2 += 1
+            }
+        }
     }
 
     // SQLiteのデータを読み込む
@@ -230,4 +244,17 @@ class MainActivity : AppCompatActivity() {
         db.insert("testdb", null, values)
         db.update("testdb", values, "date = ?", arrayOf(dateData))
     }
+
+    // task完了度により背景色を変化
+    private fun backColor(taskChecked: Boolean, rewardChecked: Boolean){
+        val constraint: View =findViewById(R.id.constraint)
+        if (taskChecked && rewardChecked){
+            constraint.background = getDrawable(R.color.check2)
+        }else if (taskChecked || rewardChecked){
+            constraint.background = getDrawable(R.color.check1)
+        }else{
+            constraint.background = getDrawable(R.color.check0)
+        }
+    }
+
 }

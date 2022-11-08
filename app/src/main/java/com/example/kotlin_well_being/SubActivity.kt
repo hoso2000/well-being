@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import org.w3c.dom.Text
 
 class SubActivity : AppCompatActivity() {
 
