@@ -22,8 +22,10 @@
         android:id="@+id/taskName"
         android:layout_width="0dp"
         android:layout_height="66dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:text="タスク"
+        android:textColor="@color/main"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -34,8 +36,10 @@
         android:id="@+id/rewardName"
         android:layout_width="0dp"
         android:layout_height="66dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="52dp"
         android:text="やりたいこと"
+        android:textColor="@color/main"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -50,7 +54,7 @@
         android:layout_marginTop="36dp"
         android:checked="false"
         android:text="登録してください"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/taskName"
         app:layout_constraintTop_toTopOf="@+id/taskName" />
 
     <CheckBox
@@ -64,17 +68,17 @@
         app:layout_constraintStart_toStartOf="@+id/rewardName"
         app:layout_constraintTop_toTopOf="@+id/rewardName" />
 
-    <Button
-        android:id="@+id/btnSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="150dp"
-        android:text="登録"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rewardName" />
+    <!--    <Button-->
+    <!--        android:id="@+id/btnSend"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="150dp"-->
+    <!--        android:layout_marginTop="40dp"-->
+    <!--        android:layout_marginEnd="150dp"-->
+    <!--        android:text="登録"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/rewardName" />-->
 
     <TextView
         android:id="@+id/testView"
@@ -86,15 +90,19 @@
         app:layout_constraintEnd_toEndOf="@+id/taskName"
         app:layout_constraintTop_toTopOf="@+id/taskName" />
 
-    <Button
-        android:id="@+id/pushBtn"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/AcButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="26dp"
-        android:text="通知"
-        app:layout_constraintBottom_toBottomOf="@+id/rewardName"
-        app:layout_constraintEnd_toEndOf="@+id/rewardName" />
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:contentDescription="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reward"
+        app:layout_constraintVertical_bias="0.836"
+        app:srcCompat="@android:drawable/ic_input_add" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

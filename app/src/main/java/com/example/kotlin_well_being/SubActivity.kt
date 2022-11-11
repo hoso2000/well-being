@@ -3,10 +3,10 @@ package com.example.kotlin_well_being
 import android.content.ContentValues
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+
 
 class SubActivity : AppCompatActivity() {
 
@@ -32,26 +32,33 @@ class SubActivity : AppCompatActivity() {
         textDate.text = getDate
 
         val spinner = findViewById<Spinner>(R.id.spinner)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, spinnerItems)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        val adapter = ArrayAdapter(
+            this,
+            R.layout.custom_spinner,
+            resources.getStringArray(R.array.list)
+        )
+        adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
         spinner.adapter = adapter
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
-            // 項目が選択された時に呼ばれる
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                spinnerText = parent?.selectedItem as String
-                Toast.makeText(this@SubActivity, spinnerText, Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-        }
+//        val adapter = ArrayAdapter(this, android.R.layout., spinnerItems)
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        spinner.adapter = adapter
+//        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//
+//            // 項目が選択された時に呼ばれる
+//            override fun onItemSelected(
+//                parent: AdapterView<*>?,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//                spinnerText = parent?.selectedItem as String
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                TODO("Not yet implemented")
+//            }
+//        }
 
         //登録ボタン（アクティビティの終了）
         btnBack.setOnClickListener {
@@ -59,11 +66,16 @@ class SubActivity : AppCompatActivity() {
             db = helper.writableDatabase
             val task = et1.text.toString()
             val reward = et2.text.toString()
-            // 入力したテキストをSQLiteに登録
-            insertData(db,getDate,spinnerText,task,reward,isChecked,isChecked2)
-            //insertData(db,getDate,spinnerText,reward,isChecked,isChecked2)
-            val intentBack = Intent(application, MainActivity::class.java)
-            startActivity(intentBack)
+            if(reward == "") {
+                val toast = Toast.makeText(this, "ご褒美を入力してください", Toast.LENGTH_SHORT)
+                toast.show()
+            }else{
+                // 入力したテキストをSQLiteに登録
+                insertData(db,getDate,spinnerText,task,reward,isChecked,isChecked2)
+                val intentBack = Intent(application, MainActivity::class.java)
+                startActivity(intentBack)
+            }
+
         }
     }
 

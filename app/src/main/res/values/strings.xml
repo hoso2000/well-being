@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">ととのうアプリ</string>
+    <string-array name="list">
+        <item>授業</item>
+        <item>課題</item>
+        <item>勉強</item>
+        <item>研究・ゼミ</item>
+        <item>バイト</item>
+        <item>部活・サークル</item>
+        <item>プロジェクト活動</item>
+        <item>就活</item>
+        <item>家事</item>
+        <item>その他</item>
+    </string-array>
 </resources>

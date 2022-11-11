@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="xxxx/xx/xx"
+        android:textColor="@color/main"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView" />
@@ -21,11 +22,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="タスク"
+        android:textColor="@color/main"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.179"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textView3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.213" />
 
@@ -33,18 +35,19 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="ご褒美"
+        android:textColor="@color/main"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.351" />
+        app:layout_constraintTop_toBottomOf="@+id/editText1" />
 
     <Button
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="登録"
+        app:backgroundTint="@color/main"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -54,36 +57,47 @@
 
     <EditText
         android:id="@+id/editText1"
-        android:layout_width="wrap_content"
+        android:layout_width="324dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text=""
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintEnd_toEndOf="@+id/textView3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <EditText
         android:id="@+id/editText2"
-        android:layout_width="wrap_content"
+        android:layout_width="327dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editText1"
+        app:layout_constraintHorizontal_bias="0.551"
+        app:layout_constraintStart_toStartOf="@+id/editText1"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/textView3"
+        android:layout_width="313dp"
+        android:layout_height="51dp"
+        android:text="&quot;やらなければならないこと&quot;の種類を選択してください。"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.479"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="&quot;やらなければいけないこと&quot;を入力してください。"
+        android:layout_marginTop="8dp"
+        android:text="タスクの詳細を入力してください。"
         app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
     <TextView
         android:id="@+id/textView4"
@@ -95,117 +109,13 @@
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="315dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="36dp"
+        android:layout_width="232dp"
+        android:layout_height="36dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintHorizontal_bias="0.268"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        android:background="@color/main"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-    <!--    <RadioGroup-->
-    <!--        android:id="@+id/radioGroup3"-->
-    <!--        android:layout_width="407dp"-->
-    <!--        android:layout_height="401dp"-->
-    <!--        android:layout_marginBottom="72dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@+id/editText1"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent">-->
-
-    <!--        <RadioButton-->
-    <!--            android:id="@+id/radioLesson"-->
-    <!--            android:layout_width="116dp"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginStart="24dp"-->
-    <!--            android:layout_marginTop="5dp"-->
-    <!--            android:onClick="onRadioButtonClicked"-->
-    <!--            android:text="授業"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/textView3"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/textView3" />-->
-
-    <!--        <RadioButton-->
-    <!--            android:id="@+id/radioWork"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginStart="148dp"-->
-    <!--            android:layout_marginTop="4dp"-->
-    <!--            android:onClick="onRadioButtonClicked"-->
-    <!--            android:text="課題"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/radioLesson"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/textView3" />-->
-
-    <!--        <RadioButton-->
-    <!--            android:id="@+id/radioStudy"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:onClick="onRadioButtonClicked"-->
-    <!--            android:text="勉強"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/radioLesson"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/radioLesson" />-->
-
-    <!--        <RadioButton-->
-    <!--            android:id="@+id/radioZemi"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginStart="74dp"-->
-    <!--            android:layout_marginEnd="74dp"-->
-    <!--            android:onClick="onRadioButtonClicked"-->
-    <!--            android:text="研究・ゼミ"-->
-    <!--            app:layout_constraintEnd_toEndOf="parent"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/btnBack"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/radioWork" />-->
-
-    <!--        <RadioButton-->
-    <!--            android:id="@+id/radioJob"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:onClick="onRadioButtonClicked"-->
-    <!--            android:text="就活"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/radioStudy"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/radioStudy" />-->
-
-    <!--        <RadioButton-->
-    <!--            android:id="@+id/radioBite"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:onClick="onRadioButtonClicked"-->
-    <!--            android:text="バイト"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/radioZemi"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/radioZemi" />-->
-
-    <!--        <RadioButton-->
-    <!--            android:id="@+id/radioCircle"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:onClick="onRadioButtonClicked"-->
-    <!--            android:text="部活・サークル"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/radioBite"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/radioBite" />-->
-
-    <!--        <RadioButton-->
-    <!--            android:id="@+id/radioProject"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:onClick="onRadioButtonClicked"-->
-    <!--            android:text="プロジェクト活動"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/radioJob"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/radioJob" />-->
-
-    <!--        <RadioButton-->
-    <!--            android:id="@+id/radioOther"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:onClick="onRadioButtonClicked"-->
-    <!--            android:text="その他"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/radioCircle"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/radioCircle" />-->
-
-    <!--        <RadioButton-->
-    <!--            android:id="@+id/radioHome"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:onClick="onRadioButtonClicked"-->
-    <!--            android:text="家事"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/radioProject"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/radioProject" />-->
-    <!--    </RadioGroup>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,15 +21,13 @@ class AlarmReceiver : BroadcastReceiver() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
-        val toast = Toast.makeText(context, "アラームによる処理が実行されました。", Toast.LENGTH_SHORT)
-        toast.show()
+//        val toast = Toast.makeText(context, "アラームによる処理が実行されました。", Toast.LENGTH_SHORT)
+//        toast.show()
         val CHANNEL_ID = "channel_id"
-//        val channel_name = "channel_name"
-//        val channel_description = "channel_description "
         val myApp = MyApp.getInstance()
         var notificationId = 0
-        var contentTitle = "a"
-        var contentText = "a"
+        var contentTitle = ""
+        var contentText = ""
 
         //　db関連
         helper = TestOpenHelper(context)
@@ -40,8 +38,8 @@ class AlarmReceiver : BroadcastReceiver() {
         val date = format.format(defaultDate)
 
         var task: String = ""
-//        var taskChecked: Int = 0
-//        var rewardChecked: Int = 0
+        var taskChecked: Int = 0
+        var rewardChecked: Int = 0
 
         val cursor = db.query(
             "testdb", arrayOf("date", "genre", "task", "reward", "taskChecker", "rewardChecker"),
@@ -60,35 +58,60 @@ class AlarmReceiver : BroadcastReceiver() {
                 if (cursor.getString(0) == date) {
                     //　taskとやりたいことを挿入
                     task = cursor.getString(1)
-//                    taskChecked = cursor.getInt(4)
-//                    rewardChecked = cursor.getInt(5)
+                    taskChecked = cursor.getInt(4)
+                    rewardChecked = cursor.getInt(5)
                     break
                 }
                 cursor.moveToNext()
             }
         }
         cursor.close()
-        Log.d("aaaaaa","bbbbbb")
 
         if (task == "授業") {
-            contentTitle = "授業"
-            contentText = "授業です"
-        } else {
+            contentTitle = "お疲れ様。"
+            contentText = "午後の授業も頑張ろう！"
+        } else if(task == "課題") {
             contentTitle = "タスク"
-            contentText = "課題はやった？"
+            contentText = "1ページずつコツコツ進めよう！"
+        }else if(task == "勉強") {
+            contentTitle = "タスク"
+            contentText = "頑張れ！"
+        }else if(task == "研究・ゼミ") {
+            contentTitle = "タスク"
+            contentText = "焦らず毎日コツコツと！"
+        }else if(task == "部活・サークル") {
+            contentTitle = "タスク"
+            contentText = "1ページずつコツコツ進めよう！"
+        }else if(task == "プロジェクト活動") {
+            contentTitle = "タスク"
+            contentText = "頑張れ！"
+        }else if(task == "就活") {
+            contentTitle = "タスク"
+            contentText = "やればやるだけ力になるよ！"
+        }else if(task == "家事") {
+            contentTitle = "タスク"
+            contentText = "早く終わらせて好きなことをしよう！"
+        }else {
+            contentTitle = "タスク"
+            contentText = "お疲れ様"
+        }
+        if (taskChecked == 1){
+            contentTitle="お疲れ様"
+            contentText="今日は何して過ごそうか"
         }
 
 
+        if (rewardChecked != 1) {
+            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_background)    /// 表示されるアイコン
+                .setContentTitle(contentTitle)                  /// 通知タイトル
+                .setContentText(contentText)           /// 通知コンテンツ
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_background)    /// 表示されるアイコン
-            .setContentTitle(contentTitle)                  /// 通知タイトル
-            .setContentText(contentText)           /// 通知コンテンツ
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-        with(NotificationManagerCompat.from(context)) {
-            notify(notificationId, builder.build())
-            notificationId += 1
+            with(NotificationManagerCompat.from(context)) {
+                notify(notificationId, builder.build())
+                notificationId += 1
+            }
         }
     }
 }

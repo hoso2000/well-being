@@ -37,25 +37,28 @@ class MainActivity : AppCompatActivity() {
 
         val task:CheckBox = findViewById(R.id.task)
         val reward:CheckBox = findViewById(R.id.reward)
-        val btnSend:Button = findViewById(R.id.btnSend)
+        //val btnSend:Button = findViewById(R.id.btnSend)
+        val ACbtn:View = findViewById(R.id.AcButton)
 
         var taskChecked: Int
         var rewardChecked: Int
 
         // alertのランダムで表示されるメッセージと画像の配列
-        val taskMessage = arrayOf("よく頑張ったね","えらい","最高")
+        val taskMessage = arrayOf("よく頑張ったね","お疲れ様","最高")
         val rewardMessage = arrayOf("楽しい一日になったね","すてきな一日","パーフェクト")
         val taskImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
         val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
 
-        // push通知関連
-        val CHANNEL_ID = "channel_id"
-        val channel_name = "channel_name"
-        val channel_description = "channel_description "
-        val pushBtn:Button = findViewById(R.id.pushBtn)
+//        // push通知関連
+//        val CHANNEL_ID = "channel_id"
+//        val channel_name = "channel_name"
+//        val channel_description = "channel_description "
 
         readData(date)
+        task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
+        reward.isClickable = reward.text != "登録してください"
         reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
+
         backColor(task.isChecked, reward.isChecked)
 
         // 22時に表示されない
@@ -63,41 +66,45 @@ class MainActivity : AppCompatActivity() {
         val alarmIntent: PendingIntent = Intent(this, AlarmReceiver::class.java).let { intent ->
             PendingIntent.getBroadcast(this, 0, intent, 0)
         }
-        //各タスク用の通知
-        val alarmMgrTask: AlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, AlarmReceiverTask::class.java)
-        intent.putExtra("id",1)
-        val alarmIntentTask = PendingIntent.getBroadcast(this, 1, intent, 0)
+        //2つ目の通知で使う予定だった。
+//        val alarmMgrTask: AlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val intent = Intent(this, AlarmReceiverTask::class.java)
+//        intent.putExtra("id",1)
+//        val alarmIntentTask = PendingIntent.getBroadcast(this, 1, intent, 0)
 
-//        val calendar: Calendar = Calendar.getInstance().apply {
-//            timeInMillis = System.currentTimeMillis()
-//            set(Calendar.HOUR_OF_DAY, 23)
-//            set(Calendar.MINUTE, 30)
-//        }
-//        alarmMgr.setInexactRepeating(
-//            AlarmManager.RTC_WAKEUP,
-//            calendar.timeInMillis,
-//            AlarmManager.INTERVAL_DAY,
-//            alarmIntent
-//        )
-        alarmMgr.setRepeating(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + 1 * 1000,
-            3 * 1000,
+        // 時間指定で通知する
+        val calendar: Calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, 13)
+            set(Calendar.MINUTE, 30)
+        }
+        alarmMgr.setInexactRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
             alarmIntent
         )
-        alarmMgrTask.setRepeating(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + 2 * 1000,
-            5 * 1000,
-            alarmIntentTask
-        )
+
+//        alarmMgr.setRepeating(
+//            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//            SystemClock.elapsedRealtime() + 1 * 1000,
+//            3 * 1000,
+//            alarmIntent
+//        )
+//        alarmMgrTask.setRepeating(
+//            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//            SystemClock.elapsedRealtime() + 2 * 1000,
+//            5 * 1000,
+//            alarmIntentTask
+//        )
 
         // 日付を取得
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             var fixMonth = (month % 12) + 1
             date = "$year/$fixMonth/$dayOfMonth"
             readData(date)
+            task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
+            reward.isClickable = reward.text != "登録してください"
             reward.isClickable = task.isChecked
             backColor(task.isChecked, reward.isChecked)
         }
@@ -143,42 +150,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         //編集画面へ遷移
-        btnSend.setOnClickListener {
+        ACbtn.setOnClickListener {
             val intent = Intent(application, SubActivity::class.java)
             intent.putExtra("DATE_KEY",date)
             startActivity(intent)
         }
 
-        // 通知の表示
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = channel_name
-            val descriptionText = channel_description
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            /// チャネルを登録
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        /// 通知の中身
-        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_background)    /// 表示されるアイコン
-            .setContentTitle("ボタンが押されました")                  /// 通知タイトル
-            .setContentText("テスト中")           /// 通知コンテンツ
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)   /// 通知の優先度
-
-
-        var notificationId2 = 0   /// notificationID
-        pushBtn.setOnClickListener {
-            /// ボタンを押して通知を表示
-            with(NotificationManagerCompat.from(this)) {
-                notify(notificationId2, builder.build())
-                notificationId2 += 1
-            }
-        }
+//        // 通知の表示
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val name = channel_name
+//            val descriptionText = channel_description
+//            val importance = NotificationManager.IMPORTANCE_DEFAULT
+//            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+//                description = descriptionText
+//            }
+//            /// チャネルを登録
+//            val notificationManager: NotificationManager =
+//                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//            notificationManager.createNotificationChannel(channel)
+//    }
     }
 
     // SQLiteのデータを読み込む
