@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
@@ -43,22 +44,22 @@ class SubActivity : AppCompatActivity() {
 //        val adapter = ArrayAdapter(this, android.R.layout., spinnerItems)
 //        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 //        spinner.adapter = adapter
-//        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//
-//            // 項目が選択された時に呼ばれる
-//            override fun onItemSelected(
-//                parent: AdapterView<*>?,
-//                view: View?,
-//                position: Int,
-//                id: Long
-//            ) {
-//                spinnerText = parent?.selectedItem as String
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                TODO("Not yet implemented")
-//            }
-//        }
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+            // 項目が選択された時に呼ばれる
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                spinnerText = parent?.selectedItem as String
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
 
         //登録ボタン（アクティビティの終了）
         btnBack.setOnClickListener {

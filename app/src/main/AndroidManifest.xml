@@ -28,6 +28,9 @@
         <activity
             android:name=".SubActivity" >
         </activity>
+        <activity
+            android:name=".Sub2Activity" >
+        </activity>
         <receiver android:name=".AlarmReceiver" android:process=":remote" />
     </application>
 
