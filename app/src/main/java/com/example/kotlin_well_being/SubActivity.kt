@@ -22,6 +22,7 @@ class SubActivity : AppCompatActivity() {
 
         val textDate :TextView = findViewById(R.id.textView0)
         val btnBack :Button = findViewById(R.id.btnBack)
+        val btnAdd :Button = findViewById(R.id.btnAdd)
         val et1 :EditText = findViewById(R.id.editText1)
         val et2 :EditText = findViewById(R.id.editText2)
         val isChecked = 0
@@ -61,21 +62,25 @@ class SubActivity : AppCompatActivity() {
             }
         }
 
-        //登録ボタン（アクティビティの終了）
-        btnBack.setOnClickListener {
+        btnAdd.setOnClickListener{
             helper = TestOpenHelper(applicationContext)
             db = helper.writableDatabase
             val task = et1.text.toString()
+            insertData(db,getDate,spinnerText,task,isChecked)
+        }
+
+        //登録ボタン（アクティビティの終了）
+        btnBack.setOnClickListener {
             val reward = et2.text.toString()
-            if(reward == "") {
-                val toast = Toast.makeText(this, "ご褒美を入力してください", Toast.LENGTH_SHORT)
-                toast.show()
-            }else{
+//            if(reward == "") {
+//                val toast = Toast.makeText(this, "ご褒美を入力してください", Toast.LENGTH_SHORT)
+//                toast.show()
+//            }else{
                 // 入力したテキストをSQLiteに登録
-                insertData(db,getDate,spinnerText,task,reward,isChecked,isChecked2)
-                val intentBack = Intent(application, MainActivity::class.java)
-                startActivity(intentBack)
-            }
+            insertData2(db,getDate,reward,isChecked2)
+            val intentBack = Intent(application, MainActivity::class.java)
+            startActivity(intentBack)
+//            }
 
         }
     }
@@ -83,15 +88,22 @@ class SubActivity : AppCompatActivity() {
 
 
     // SQLiteに登録
-    private fun insertData(db: SQLiteDatabase, dateData: String?, genreData:String, taskData: String, rewardData: String, taskChecker: Int, rewardChecker: Int) {
+    private fun insertData(db: SQLiteDatabase, dateData: String?, genreData:String, taskData: String, taskChecker: Int) {
         val values = ContentValues()
-        values.put("date", dateData)
+        values.put("dateId", dateData)
         values.put("genre", genreData)
         values.put("task", taskData)
-        values.put("reward", rewardData)
         values.put("taskChecker", taskChecker)
-        values.put("rewardChecker", rewardChecker)
-        db.insert("testdb", null, values)
-        db.update("testdb", values, "date = ?", arrayOf(dateData))
+        db.insert("taskdb", "null", values)
+        //db.update("taskdb", values, "date = ?", arrayOf(dateData))
+        //db.update("rewarddb", values2, "date = ?", arrayOf(dateData))
+    }
+
+    private fun insertData2(db: SQLiteDatabase, dateData: String?, rewardData: String, rewardChecker: Int) {
+        val values2 = ContentValues()
+        values2.put("dateId", dateData)
+        values2.put("reward", rewardData)
+        values2.put("rewardChecker", rewardChecker)
+        db.insert("rewarddb", "null", values2)
     }
 }
