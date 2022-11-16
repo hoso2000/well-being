@@ -25,7 +25,17 @@ class Sub2Activity : AppCompatActivity()  {
         var sumReward = 0
         var sum = 0
         val cursor = db.query(
-            "testdb", arrayOf("date", "genre", "task", "reward", "taskChecker", "rewardChecker"),
+            "taskdb", arrayOf("_id", "dateId", "genre", "task", "taskChecker"),
+            //"dateId = ${date}",
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+        val cursor2 = db.query(
+            "rewarddb", arrayOf("_id2", "dateId", "reward", "rewardChecker"),
+//            "dateId = ${date}",
             null,
             null,
             null,
@@ -42,12 +52,21 @@ class Sub2Activity : AppCompatActivity()  {
                 // 同じ日付を見つけたら呼び出して、終了
                 taskChecked = cursor.getInt(4)
                 sumTask += taskChecked
-                rewardChecked = cursor.getInt(5)
-                sumReward += rewardChecked
                 cursor.moveToNext()
             }
         }
         cursor.close()
+        if (cursor2.count != 0) {
+            cursor2.moveToFirst()
+            //データベース内を探索
+            for (i in 0 until cursor.count  ) {
+                // 同じ日付を見つけたら呼び出して、終了
+                rewardChecked = cursor2.getInt(3)
+                sumReward += rewardChecked
+                cursor2.moveToNext()
+            }
+        }
+        cursor2.close()
         sum = sumTask + sumReward
         sumText.text = sum.toString()
 

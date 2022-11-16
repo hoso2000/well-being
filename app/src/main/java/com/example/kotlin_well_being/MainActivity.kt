@@ -1,5 +1,6 @@
 package com.example.kotlin_well_being
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.ContentValues
@@ -8,6 +9,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +28,41 @@ class MainActivity : AppCompatActivity() {
 
     private var alarmMgr: AlarmManager? = null
     private lateinit var alarmIntent: PendingIntent
+
+    private var id: Int = 0
+    private val FROM = arrayOf("name", "check")
+    // リソースのコントロールID
+    private val TO = intArrayOf(R.id.listTextView, R.id.listCheckBox)
+
+    private class MyAdapter(
+        context: Context?, data: MutableList<MutableMap<String?, Any>?>,
+        resource: Int, from: Array<String>, to: IntArray?
+    ) :
+        SimpleAdapter(context, data, resource, from, to) {
+        // 外部から呼び出し可能なマップ
+        var checkList: MutableMap<Int, Boolean?> = HashMap()
+
+        init {
+
+            // 初期値を設定する
+            for (i in data.indices) {
+                val map = data[i] as Map<*, *>?
+                checkList[i] = map!!["check"] as Boolean?
+            }
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view = super.getView(position, convertView, parent)
+            val ch = view.findViewById<CheckBox>(R.id.listCheckBox)
+
+            // チェックの状態が変化した場合はマップに記憶する
+            ch.setOnCheckedChangeListener { buttonView, isChecked ->
+                checkList[position] = isChecked
+            }
+            return view
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +107,6 @@ class MainActivity : AppCompatActivity() {
         val task:CheckBox = findViewById(R.id.task)
         val reward:CheckBox = findViewById(R.id.reward)
         val btnSend:Button = findViewById(R.id.btnSend)
-        // val ACbtn:View = findViewById(R.id.AcButton)
         val btnMemory:Button = findViewById(R.id.btnMemory)
 
         var taskChecked: Int
@@ -128,7 +165,7 @@ class MainActivity : AppCompatActivity() {
             }else{
                 taskChecked = 0
             }
-            insertTaskChecker(db,date,taskChecked)
+            insertTaskChecker(db,id,taskChecked)
             reward.isClickable = task.isChecked
             changeChar(task.isChecked, reward.isChecked)
         }
@@ -148,7 +185,7 @@ class MainActivity : AppCompatActivity() {
             }else{
                 rewardChecked = 0
             }
-            insertRewardChecker(db,date,rewardChecked)
+            insertRewardChecker(db,id,rewardChecked)
             changeChar(task.isChecked, reward.isChecked)
         }
 
@@ -167,9 +204,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     // SQLiteのデータを読み込む
+    @SuppressLint("SuspiciousIndentation")
     private fun readData(date: String) {
         helper = TestOpenHelper(applicationContext)
         db = helper.readableDatabase
+
+        // リスト関連
+        val lv: ListView = findViewById(R.id.listView)
+        val list: MutableList<MutableMap<String?, Any>?> = ArrayList()
+        var map: MutableMap<String?, Any> = HashMap()
+        map["name"] = "登録"
+        map["check"] = false
+        list.add(map)
+        map["name"] = "aiu"
+        map["check"] = false
+        list.add(map)
 
         val test:TextView = findViewById(R.id.testView)
         val task:CheckBox = findViewById(R.id.task)
@@ -182,7 +231,18 @@ class MainActivity : AppCompatActivity() {
         var rewardChecked = 0
 
         val cursor = db.query(
-            "testdb", arrayOf("date", "genre", "task", "reward", "taskChecker", "rewardChecker"),
+            "taskdb", arrayOf("_id", "dateId", "genre", "task", "taskChecker"),
+            "dateId == ?",
+            //null,
+            arrayOf(date),
+            null,
+            null,
+            null
+        )
+
+        val cursor2 = db.query(
+            "rewarddb", arrayOf("_id2", "dateId", "reward", "rewardChecker"),
+//            "dateId = ${date}",
             null,
             null,
             null,
@@ -190,56 +250,78 @@ class MainActivity : AppCompatActivity() {
             null
         )
 
+
         //初起動時DBの要素ゼロで実行されるのを防止するため
         if (cursor.count != 0) {
             cursor.moveToFirst()
             //データベース内を探索
             for (i in 0 until cursor.count ) {
                 // 同じ日付を見つけたら呼び出して、終了
-                if(cursor.getString(0) == date){
-                    //　taskとやりたいことを挿入
-                    test.text = cursor.getString(0)
-                    task.text = cursor.getString(1) + "　" + cursor.getString(2)
-                    reward.text = cursor.getString(3)
-                    taskChecked = cursor.getInt(4)
-                    rewardChecked = cursor.getInt(5)
-                    break
+                id  =cursor.getInt(0)
+                test.text = cursor.getString(1)
+                task.text = cursor.getString(2) + "　" + cursor.getString(3)
+                taskChecked = cursor.getInt(4)
+                task.isChecked = taskChecked == 1
+                map["name"] = task.text
+                map["check"] = task.isChecked
+                list.add(map)
+                if (i != cursor.count) {
+                    cursor.moveToNext()
                 }
-                cursor.moveToNext()
             }
-            task.isChecked = taskChecked == 1
-            reward.isChecked = rewardChecked == 1
         }
         cursor.close()
+
+        val adapter = MyAdapter(
+            this@MainActivity,
+            list, R.layout.list, FROM, TO
+        )
+        lv.adapter = adapter
+
+        if (cursor2.count != 0) {
+            cursor2.moveToFirst()
+            if(cursor2.getString(1) == date) {
+                //データベース内を探索
+                for (i in 0 until cursor2.count) {
+                    id = cursor2.getInt(0)
+                    reward.text = cursor2.getString(2)
+                    rewardChecked = cursor2.getInt(3)
+                    break
+                }
+                cursor2.moveToNext()
+            }
+            reward.isChecked = rewardChecked == 1
+        }
+        cursor2.close()
     }
 
     // task checkboxを登録
-    private fun insertTaskChecker(db: SQLiteDatabase, dateData: String?, taskChecker: Int) {
+    private fun insertTaskChecker(db: SQLiteDatabase, id: Int, taskChecker: Int) {
         val values = ContentValues()
 
         values.put("taskChecker", taskChecker)
         //db.insert("testdb", null, values)
-        db.update("testdb", values, "date = ?", arrayOf(dateData))
+        db.update("taskdb", values, "_id = ?", arrayOf(id.toString()))
     }
 
     // reward checkboxを登録
-    private fun insertRewardChecker(db: SQLiteDatabase, dateData: String?, rewardChecker: Int) {
+    private fun insertRewardChecker(db: SQLiteDatabase, id: Int, rewardChecker: Int) {
         val values = ContentValues()
 
         values.put("rewardChecker", rewardChecker)
         //db.insert("testdb", null, values)
-        db.update("testdb", values, "date = ?", arrayOf(dateData))
+        db.update("rewarddb", values, "date = ?", arrayOf(id.toString()))
     }
 
     // task完了度によりキャラクターが変化
     private fun changeChar(taskChecked: Boolean, rewardChecked: Boolean){
         val myImage: ImageView = findViewById(R.id.imageView)
-        if (taskChecked && rewardChecked){
-            myImage.setImageResource(R.drawable.good1)
-        }else if (taskChecked && !rewardChecked){
-            myImage.setImageResource(R.drawable.reward)
-        }else{
-            myImage.setImageResource(R.drawable.task)
-        }
+//        if (taskChecked && rewardChecked){
+//            myImage.setImageResource(R.drawable.good1)
+//        }else if (taskChecked && !rewardChecked){
+//            myImage.setImageResource(R.drawable.reward)
+//        }else{
+//            myImage.setImageResource(R.drawable.task)
+//        }
     }
 }
