@@ -77,7 +77,7 @@ class SubActivity : AppCompatActivity() {
 //                toast.show()
 //            }else{
             // 入力したテキストをSQLiteに登録
-            insertData2(db,getDate,reward,isChecked2)
+//            insertData2(db,getDate,reward,isChecked2)
             val intentBack = Intent(application, MainActivity::class.java)
             startActivity(intentBack)
 //            }

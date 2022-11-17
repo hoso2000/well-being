@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -36,14 +37,22 @@ class MainActivity : AppCompatActivity() {
 
     private class MyAdapter(
         context: Context?, data: MutableList<MutableMap<String?, Any>?>,
-        resource: Int, from: Array<String>, to: IntArray?
+        resource: Int, from: Array<String>, to: IntArray?,_ids:List<Int>,_db: SQLiteDatabase,
+        _showDialogFunc:() ->Unit
     ) :
         SimpleAdapter(context, data, resource, from, to) {
         // 外部から呼び出し可能なマップ
         var checkList: MutableMap<Int, Boolean?> = HashMap()
 
-        init {
+        val ids:kotlin.collections.List<Int>
+        val db:SQLiteDatabase
 
+        var showDialogFunc:()->Unit
+
+        init {
+            ids = _ids
+            db=_db
+            showDialogFunc = _showDialogFunc
             // 初期値を設定する
             for (i in data.indices) {
                 val map = data[i] as Map<*, *>?
@@ -58,6 +67,18 @@ class MainActivity : AppCompatActivity() {
             // チェックの状態が変化した場合はマップに記憶する
             ch.setOnCheckedChangeListener { buttonView, isChecked ->
                 checkList[position] = isChecked
+                //Toast.makeText(convertView!!.context,ids[position],Toast.LENGTH_SHORT).show()
+                val id:Int = ids[position]
+                val values = ContentValues()
+                var taskChecker: Int
+                if (isChecked) {
+                    taskChecker = 1
+                    showDialogFunc()
+                }else{
+                    taskChecker = 0
+                }
+                values.put("taskChecker", taskChecker)
+                db.update("taskdb", values, "_id = ?", arrayOf(id.toString()))
             }
             return view
         }
@@ -83,14 +104,14 @@ class MainActivity : AppCompatActivity() {
             // 時間指定で通知する
             val calendar: Calendar = Calendar.getInstance().apply {
                 timeInMillis = System.currentTimeMillis()
-                set(Calendar.HOUR_OF_DAY, 13)
-                set(Calendar.MINUTE, 30)
+                set(Calendar.HOUR_OF_DAY, 15)
+                set(Calendar.MINUTE, 15)
             }
             alarmMgr?.setRepeating(
                 AlarmManager.RTC_WAKEUP,
                 calendar.timeInMillis,
-                AlarmManager.INTERVAL_DAY,
-                //1000 * 60 * 15,
+                //AlarmManager.INTERVAL_DAY,
+                1000 * 60 * 15,
                 alarmIntent
             )
             //プリファレンスの書き変え
@@ -104,7 +125,6 @@ class MainActivity : AppCompatActivity() {
         val defaultDate = calendarView.date
         var date = format.format(defaultDate)
 
-        val task:CheckBox = findViewById(R.id.task)
         val reward:CheckBox = findViewById(R.id.reward)
         val btnSend:Button = findViewById(R.id.btnSend)
         val btnMemory:Button = findViewById(R.id.btnMemory)
@@ -113,17 +133,14 @@ class MainActivity : AppCompatActivity() {
         var rewardChecked: Int
 
         // alertのランダムで表示されるメッセージと画像の配列
-        val taskMessage = arrayOf("お疲れ様！よく頑張ったね","流石だね！","今日も目標達成できてえらい！")
         val rewardMessage = arrayOf("楽しい一日になったね","充実した一日になったね","明日もこの調子で頑張ろう！")
-        val taskImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
         val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
 
         readData(date)
-        task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
         reward.isClickable = reward.text != "登録してください"
-        reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
+        //reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
 
-        changeChar(task.isChecked, reward.isChecked)
+        //changeChar(task.isChecked, reward.isChecked)
 
 //        alarmMgr?.setRepeating(
 //            AlarmManager.ELAPSED_REALTIME_WAKEUP,
@@ -143,32 +160,32 @@ class MainActivity : AppCompatActivity() {
             var fixMonth = (month % 12) + 1
             date = "$year/$fixMonth/$dayOfMonth"
             readData(date)
-            task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
+            //task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
             reward.isClickable = reward.text != "登録してください"
-            reward.isClickable = task.isChecked
-            changeChar(task.isChecked, reward.isChecked)
+            //reward.isClickable = task.isChecked
+            //changeChar(task.isChecked, reward.isChecked)
         }
 
         //タスクが終わったら褒めるアラート
-        task.setOnClickListener{
-            if (task.isChecked) {
-                taskChecked = 1
-                val image = ImageView(this)
-                image.setImageResource(taskImage.random())
-                AlertDialog.Builder(this).apply {
-                    setTitle("お疲れ様")
-                    setMessage(taskMessage.random())
-                    setView(image)
-                    setNegativeButton("OK",null)
-                    show()
-                }
-            }else{
-                taskChecked = 0
-            }
-            insertTaskChecker(db,id,taskChecked)
-            reward.isClickable = task.isChecked
-            changeChar(task.isChecked, reward.isChecked)
-        }
+//        task.setOnClickListener{
+//            if (task.isChecked) {
+//                taskChecked = 1
+//                val image = ImageView(this)
+//                image.setImageResource(taskImage.random())
+//                AlertDialog.Builder(this).apply {
+//                    setTitle("お疲れ様")
+//                    setMessage(taskMessage.random())
+//                    setView(image)
+//                    setNegativeButton("OK",null)
+//                    show()
+//                }
+//            }else{
+//                taskChecked = 0
+//            }
+//            insertTaskChecker(db,id,taskChecked)
+//            reward.isClickable = task.isChecked
+//            changeChar(task.isChecked, reward.isChecked)
+//        }
 
         //ご褒美が終わったら褒めるアラート
         reward.setOnClickListener{
@@ -186,7 +203,7 @@ class MainActivity : AppCompatActivity() {
                 rewardChecked = 0
             }
             insertRewardChecker(db,id,rewardChecked)
-            changeChar(task.isChecked, reward.isChecked)
+            //changeChar(task.isChecked, reward.isChecked)
         }
 
         //編集画面へ遷移
@@ -212,19 +229,11 @@ class MainActivity : AppCompatActivity() {
         // リスト関連
         val lv: ListView = findViewById(R.id.listView)
         val list: MutableList<MutableMap<String?, Any>?> = ArrayList()
-        var map: MutableMap<String?, Any> = HashMap()
-        map["name"] = "登録"
-        map["check"] = false
-        list.add(map)
-        map["name"] = "aiu"
-        map["check"] = false
-        list.add(map)
+        //var map: MutableMap<String?, Any> = HashMap() イラン候補
 
         val test:TextView = findViewById(R.id.testView)
-        val task:CheckBox = findViewById(R.id.task)
         val reward:CheckBox = findViewById(R.id.reward)
         test.text = date
-        task.text = "登録してください"
         reward.text = "登録してください"
 
         var taskChecked = 0
@@ -250,21 +259,21 @@ class MainActivity : AppCompatActivity() {
             null
         )
 
-
         //初起動時DBの要素ゼロで実行されるのを防止するため
+        val ids = mutableListOf<Int>()
         if (cursor.count != 0) {
             cursor.moveToFirst()
+            test.text = cursor.getString(1)
             //データベース内を探索
             for (i in 0 until cursor.count ) {
                 // 同じ日付を見つけたら呼び出して、終了
                 id  =cursor.getInt(0)
-                test.text = cursor.getString(1)
-                task.text = cursor.getString(2) + "　" + cursor.getString(3)
+                ids.add(id)
+                var vmap: MutableMap<String?, Any> = HashMap()
+                vmap["name"] =cursor.getString(2) + "　" + cursor.getString(3)
                 taskChecked = cursor.getInt(4)
-                task.isChecked = taskChecked == 1
-                map["name"] = task.text
-                map["check"] = task.isChecked
-                list.add(map)
+                vmap["check"] = taskChecked == 1
+                list.add(vmap)
                 if (i != cursor.count) {
                     cursor.moveToNext()
                 }
@@ -274,7 +283,7 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = MyAdapter(
             this@MainActivity,
-            list, R.layout.list, FROM, TO
+            list, R.layout.list, FROM, TO,ids,db,::showDialog
         )
         lv.adapter = adapter
 
@@ -284,7 +293,7 @@ class MainActivity : AppCompatActivity() {
                 //データベース内を探索
                 for (i in 0 until cursor2.count) {
                     id = cursor2.getInt(0)
-                    reward.text = cursor2.getString(2)
+                    reward.text = cursor2.getString(    2)
                     rewardChecked = cursor2.getInt(3)
                     break
                 }
@@ -296,13 +305,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     // task checkboxを登録
-    private fun insertTaskChecker(db: SQLiteDatabase, id: Int, taskChecker: Int) {
-        val values = ContentValues()
-
-        values.put("taskChecker", taskChecker)
-        //db.insert("testdb", null, values)
-        db.update("taskdb", values, "_id = ?", arrayOf(id.toString()))
-    }
+//    private fun insertTaskChecker(db: SQLiteDatabase, id: Int, taskChecker: Int) {
+//        val values = ContentValues()
+//
+//        values.put("taskChecker", taskChecker)
+//        //db.insert("testdb", null, values)
+//        db.update("taskdb", values, "_id = ?", arrayOf(id.toString()))
+//    }
 
     // reward checkboxを登録
     private fun insertRewardChecker(db: SQLiteDatabase, id: Int, rewardChecker: Int) {
@@ -323,5 +332,19 @@ class MainActivity : AppCompatActivity() {
 //        }else{
 //            myImage.setImageResource(R.drawable.task)
 //        }
+    }
+
+    private fun showDialog(){
+//        val image = ImageView(this@MyAdapter)
+//        image.setImageResource(taskImage.random())
+        val taskMessage = arrayOf("お疲れ様！よく頑張ったね","流石だね！","今日も目標達成できてえらい！")
+        val taskImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
+        AlertDialog.Builder(this).apply {
+            setTitle("お疲れ様")
+            setMessage(taskMessage.random())
+            //setView(image)
+            setNegativeButton("OK",null)
+            show()
+        }
     }
 }
