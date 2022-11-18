@@ -3,10 +3,7 @@ package com.example.kotlin_well_being
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.util.Log
@@ -34,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private val FROM = arrayOf("name", "check")
     // リソースのコントロールID
     private val TO = intArrayOf(R.id.listTextView, R.id.listCheckBox)
+//    private val lv: ListView = findViewById(R.id.listView)
+    private val list: MutableList<MutableMap<String?, Any>?> = ArrayList()
 
     private class MyAdapter(
         context: Context?, data: MutableList<MutableMap<String?, Any>?>,
@@ -187,6 +186,21 @@ class MainActivity : AppCompatActivity() {
 //            changeChar(task.isChecked, reward.isChecked)
 //        }
 
+//        val lv: ListView = findViewById(R.id.listView)
+//        lv.onItemClickListener =
+//            AdapterView.OnItemClickListener { parent, view, position, _id ->
+//                AlertDialog.Builder(this)
+//                    .setTitle("削除しますか")
+//                    //6)Yesを押したらremoveで削除
+//                    .setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
+//                        db.delete("taskdb", "_id = ?", arrayOf(_id.toString()))
+//                        //adapter.notifyDataSetChanged()//画面を更新する呪文
+//                        readData(date)
+//                    })
+//                    .setNegativeButton("No", null)
+//                    .show()
+//            }
+
         //ご褒美が終わったら褒めるアラート
         reward.setOnClickListener{
             if (reward.isChecked) {
@@ -229,7 +243,6 @@ class MainActivity : AppCompatActivity() {
         // リスト関連
         val lv: ListView = findViewById(R.id.listView)
         val list: MutableList<MutableMap<String?, Any>?> = ArrayList()
-        //var map: MutableMap<String?, Any> = HashMap() イラン候補
 
         val test:TextView = findViewById(R.id.testView)
         val reward:CheckBox = findViewById(R.id.reward)
@@ -316,10 +329,9 @@ class MainActivity : AppCompatActivity() {
     // reward checkboxを登録
     private fun insertRewardChecker(db: SQLiteDatabase, id: Int, rewardChecker: Int) {
         val values = ContentValues()
-
         values.put("rewardChecker", rewardChecker)
         //db.insert("testdb", null, values)
-        db.update("rewarddb", values, "date = ?", arrayOf(id.toString()))
+        db.update("rewarddb", values, "_id2 = ?", arrayOf(id.toString()))
     }
 
     // task完了度によりキャラクターが変化
@@ -335,14 +347,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showDialog(){
-//        val image = ImageView(this@MyAdapter)
-//        image.setImageResource(taskImage.random())
-        val taskMessage = arrayOf("お疲れ様！よく頑張ったね","流石だね！","今日も目標達成できてえらい！")
         val taskImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
+        val taskMessage = arrayOf("お疲れ様！よく頑張ったね","流石だね！","今日も目標達成できてえらい！")
+        val image = ImageView(this)
+        image.setImageResource(taskImage.random())
         AlertDialog.Builder(this).apply {
             setTitle("お疲れ様")
             setMessage(taskMessage.random())
-            //setView(image)
+            setView(image)
             setNegativeButton("OK",null)
             show()
         }

@@ -23,6 +23,7 @@ class SubActivity : AppCompatActivity() {
         val textDate :TextView = findViewById(R.id.textView0)
         val btnBack :Button = findViewById(R.id.btnBack)
         val btnAdd :Button = findViewById(R.id.btnAdd)
+        val btnAdd2 :Button = findViewById(R.id.btnAdd2)
         val et1 :EditText = findViewById(R.id.editText1)
         val et2 :EditText = findViewById(R.id.editText2)
         val isChecked = 0
@@ -65,23 +66,27 @@ class SubActivity : AppCompatActivity() {
         btnAdd.setOnClickListener{
             helper = TestOpenHelper(applicationContext)
             db = helper.writableDatabase
-            val task = et1.text.toString()
+            var task = et1.text.toString()
             insertData(db,getDate,spinnerText,task,isChecked)
+            task = ""
+        }
+
+        btnAdd2.setOnClickListener{
+            helper = TestOpenHelper(applicationContext)
+            db = helper.writableDatabase
+            val reward = et2.text.toString()
+            insertData2(db,getDate,reward,isChecked2)
         }
 
         //登録ボタン（アクティビティの終了）
         btnBack.setOnClickListener {
-            val reward = et2.text.toString()
 //            if(reward == "") {
 //                val toast = Toast.makeText(this, "ご褒美を入力してください", Toast.LENGTH_SHORT)
 //                toast.show()
 //            }else{
             // 入力したテキストをSQLiteに登録
-//            insertData2(db,getDate,reward,isChecked2)
             val intentBack = Intent(application, MainActivity::class.java)
             startActivity(intentBack)
-//            }
-
         }
     }
 
