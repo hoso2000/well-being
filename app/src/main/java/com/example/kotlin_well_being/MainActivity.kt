@@ -6,10 +6,10 @@ import android.app.PendingIntent
 import android.content.*
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.text.SimpleDateFormat
@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
     private val FROM = arrayOf("name", "check")
     // リソースのコントロールID
     private val TO = intArrayOf(R.id.listTextView, R.id.listCheckBox)
-//    private val lv: ListView = findViewById(R.id.listView)
     private val list: MutableList<MutableMap<String?, Any>?> = ArrayList()
 
     private class MyAdapter(
@@ -62,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = super.getView(position, convertView, parent)
             val ch = view.findViewById<CheckBox>(R.id.listCheckBox)
+            val trash = view.findViewById<ImageView>(R.id.listDelete)
 
             // チェックの状態が変化した場合はマップに記憶する
             ch.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -78,6 +78,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 values.put("taskChecker", taskChecker)
                 db.update("taskdb", values, "_id = ?", arrayOf(id.toString()))
+            }
+            trash.setOnClickListener{
+                //Toast.makeText(convertView!!.context,ids[position],Toast.LENGTH_SHORT).show()
+                val id:Int = ids[position]
+                db.delete("taskdb", "_id = ?", arrayOf(id.toString()))
+                //adapter.notifyDataSetChanged()//画面を更新する呪文
             }
             return view
         }
@@ -186,20 +192,6 @@ class MainActivity : AppCompatActivity() {
 //            changeChar(task.isChecked, reward.isChecked)
 //        }
 
-//        val lv: ListView = findViewById(R.id.listView)
-//        lv.onItemClickListener =
-//            AdapterView.OnItemClickListener { parent, view, position, _id ->
-//                AlertDialog.Builder(this)
-//                    .setTitle("削除しますか")
-//                    //6)Yesを押したらremoveで削除
-//                    .setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
-//                        db.delete("taskdb", "_id = ?", arrayOf(_id.toString()))
-//                        //adapter.notifyDataSetChanged()//画面を更新する呪文
-//                        readData(date)
-//                    })
-//                    .setNegativeButton("No", null)
-//                    .show()
-//            }
 
         //ご褒美が終わったら褒めるアラート
         reward.setOnClickListener{
