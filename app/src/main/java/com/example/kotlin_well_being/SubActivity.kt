@@ -68,7 +68,9 @@ class SubActivity : AppCompatActivity() {
             db = helper.writableDatabase
             var task = et1.text.toString()
             insertData(db,getDate,spinnerText,task,isChecked)
-            task = ""
+            val toast = Toast.makeText(this, "タスクを追加しました。", Toast.LENGTH_SHORT)
+            toast.show()
+            et1.setText("")
         }
 
         btnAdd2.setOnClickListener{
@@ -76,6 +78,9 @@ class SubActivity : AppCompatActivity() {
             db = helper.writableDatabase
             val reward = et2.text.toString()
             insertData2(db,getDate,reward,isChecked2)
+            val toast = Toast.makeText(this, "ご褒美を追加しました。", Toast.LENGTH_SHORT)
+            toast.show()
+            et2.setText("")
         }
 
         //登録ボタン（アクティビティの終了）

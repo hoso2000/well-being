@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.text.SimpleDateFormat
@@ -35,22 +34,26 @@ class MainActivity : AppCompatActivity() {
 
     private class MyAdapter(
         context: Context?, data: MutableList<MutableMap<String?, Any>?>,
-        resource: Int, from: Array<String>, to: IntArray?,_ids:List<Int>,_db: SQLiteDatabase,
-        _showDialogFunc:() ->Unit
+        resource: Int, from: Array<String>, to: IntArray?, _ids: List<Int>, dateAd: String, _db: SQLiteDatabase,
+        _showDialogFunc: () -> Unit,
+        _readDataFunc: (String) -> Unit
     ) :
         SimpleAdapter(context, data, resource, from, to) {
         // 外部から呼び出し可能なマップ
         var checkList: MutableMap<Int, Boolean?> = HashMap()
 
         val ids:kotlin.collections.List<Int>
+        val dateAd: String = ""
         val db:SQLiteDatabase
 
         var showDialogFunc:()->Unit
+        var readDataFunc:(String)->Unit
 
         init {
             ids = _ids
             db=_db
             showDialogFunc = _showDialogFunc
+            readDataFunc = _readDataFunc
             // 初期値を設定する
             for (i in data.indices) {
                 val map = data[i] as Map<*, *>?
@@ -83,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                 //Toast.makeText(convertView!!.context,ids[position],Toast.LENGTH_SHORT).show()
                 val id:Int = ids[position]
                 db.delete("taskdb", "_id = ?", arrayOf(id.toString()))
-                //adapter.notifyDataSetChanged()//画面を更新する呪文
+                readDataFunc(dateAd)
             }
             return view
         }
@@ -130,7 +133,8 @@ class MainActivity : AppCompatActivity() {
         val defaultDate = calendarView.date
         var date = format.format(defaultDate)
 
-        val reward:CheckBox = findViewById(R.id.reward)
+        val rewardCheckBox:CheckBox = findViewById(R.id.rewardCheck)
+        val rewardText:TextView = findViewById(R.id.rewardText)
         val btnSend:Button = findViewById(R.id.btnSend)
         val btnMemory:Button = findViewById(R.id.btnMemory)
 
@@ -142,7 +146,7 @@ class MainActivity : AppCompatActivity() {
         val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
 
         readData(date)
-        reward.isClickable = reward.text != "登録してください"
+        rewardCheckBox.isClickable = rewardText.text != "登録してください"
         //reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
 
         //changeChar(task.isChecked, reward.isChecked)
@@ -166,36 +170,14 @@ class MainActivity : AppCompatActivity() {
             date = "$year/$fixMonth/$dayOfMonth"
             readData(date)
             //task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
-            reward.isClickable = reward.text != "登録してください"
+            rewardCheckBox.isClickable = rewardText.text != "登録してください"
             //reward.isClickable = task.isChecked
             //changeChar(task.isChecked, reward.isChecked)
         }
 
-        //タスクが終わったら褒めるアラート
-//        task.setOnClickListener{
-//            if (task.isChecked) {
-//                taskChecked = 1
-//                val image = ImageView(this)
-//                image.setImageResource(taskImage.random())
-//                AlertDialog.Builder(this).apply {
-//                    setTitle("お疲れ様")
-//                    setMessage(taskMessage.random())
-//                    setView(image)
-//                    setNegativeButton("OK",null)
-//                    show()
-//                }
-//            }else{
-//                taskChecked = 0
-//            }
-//            insertTaskChecker(db,id,taskChecked)
-//            reward.isClickable = task.isChecked
-//            changeChar(task.isChecked, reward.isChecked)
-//        }
-
-
         //ご褒美が終わったら褒めるアラート
-        reward.setOnClickListener{
-            if (reward.isChecked) {
+        rewardCheckBox.setOnClickListener{
+            if (rewardCheckBox.isChecked) {
                 rewardChecked = 1
                 val image = ImageView(this)
                 image.setImageResource(rewardImage.random())
@@ -235,11 +217,13 @@ class MainActivity : AppCompatActivity() {
         // リスト関連
         val lv: ListView = findViewById(R.id.listView)
         val list: MutableList<MutableMap<String?, Any>?> = ArrayList()
+        var dateAd: String = ""
 
-        val test:TextView = findViewById(R.id.testView)
-        val reward:CheckBox = findViewById(R.id.reward)
-        test.text = date
-        reward.text = "登録してください"
+        val dateText:TextView = findViewById(R.id.testView)
+        val rewardCheckBox:CheckBox = findViewById(R.id.rewardCheck)
+        val rewardText:TextView = findViewById(R.id.rewardText)
+        dateText.text = date
+        rewardText.text = "登録してください"
 
         var taskChecked = 0
         var rewardChecked = 0
@@ -268,7 +252,8 @@ class MainActivity : AppCompatActivity() {
         val ids = mutableListOf<Int>()
         if (cursor.count != 0) {
             cursor.moveToFirst()
-            test.text = cursor.getString(1)
+            dateText.text = cursor.getString(1)
+            dateAd = cursor.getString(1)
             //データベース内を探索
             for (i in 0 until cursor.count ) {
                 // 同じ日付を見つけたら呼び出して、終了
@@ -288,7 +273,7 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = MyAdapter(
             this@MainActivity,
-            list, R.layout.list, FROM, TO,ids,db,::showDialog
+            list, R.layout.list, FROM, TO,ids,dateAd,db,::showDialog, ::readData
         )
         lv.adapter = adapter
 
@@ -298,25 +283,17 @@ class MainActivity : AppCompatActivity() {
                 //データベース内を探索
                 for (i in 0 until cursor2.count) {
                     id = cursor2.getInt(0)
-                    reward.text = cursor2.getString(    2)
+                    rewardText.text = cursor2.getString(    2)
                     rewardChecked = cursor2.getInt(3)
                     break
                 }
                 cursor2.moveToNext()
             }
-            reward.isChecked = rewardChecked == 1
+            rewardCheckBox.isChecked = rewardChecked == 1
         }
         cursor2.close()
     }
 
-    // task checkboxを登録
-//    private fun insertTaskChecker(db: SQLiteDatabase, id: Int, taskChecker: Int) {
-//        val values = ContentValues()
-//
-//        values.put("taskChecker", taskChecker)
-//        //db.insert("testdb", null, values)
-//        db.update("taskdb", values, "_id = ?", arrayOf(id.toString()))
-//    }
 
     // reward checkboxを登録
     private fun insertRewardChecker(db: SQLiteDatabase, id: Int, rewardChecker: Int) {

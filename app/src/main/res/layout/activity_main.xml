@@ -20,7 +20,7 @@
 
     <CalendarView
         android:id="@+id/calendarView"
-        android:layout_width="375dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:focusedMonthDateColor="@color/blue"
         android:scrollbarSize="2dp"
@@ -35,7 +35,6 @@
         android:layout_width="390dp"
         android:layout_height="137dp"
         android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,8 +45,8 @@
 
         <ListView
             android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/task" />
@@ -96,21 +95,10 @@
         android:text="ご褒美"
         android:textColor="@color/main"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LinearLayout" />
-
-    <CheckBox
-        android:id="@+id/reward"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:checked="false"
-        android:text="登録してください"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/rewardName"
-        app:layout_constraintTop_toBottomOf="@+id/rewardName" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/testView"
@@ -122,16 +110,46 @@
         app:layout_constraintEnd_toEndOf="@+id/taskName"
         app:layout_constraintTop_toTopOf="@+id/taskName" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="131dp"
-        android:layout_height="93dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LinearLayout"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/good3" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="397dp"
+        android:layout_height="89dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/btnMemory"
+        app:layout_constraintEnd_toEndOf="@+id/LinearLayout"
+        app:layout_constraintStart_toStartOf="@+id/LinearLayout">
+
+        <CheckBox
+            android:id="@+id/rewardCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/rewardText"
+            android:layout_width="138dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="6dp"
+            android:layout_weight="1"
+            android:text="TextView" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="131dp"
+            android:layout_height="93dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/LinearLayout"
+            app:layout_constraintVertical_bias="0.706"
+            app:srcCompat="@drawable/good3" />
+
+    </LinearLayout>
 
 
     <!--    </ScrollView>-->
