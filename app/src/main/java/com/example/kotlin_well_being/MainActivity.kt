@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private class MyAdapter(
         context: Context?, data: MutableList<MutableMap<String?, Any>?>,
-        resource: Int, from: Array<String>, to: IntArray?, _ids: List<Int>, dateAd: String, _db: SQLiteDatabase,
+        resource: Int, from: Array<String>, to: IntArray?, _ids: List<Int>, _dateAd: String, _db: SQLiteDatabase,
         _showDialogFunc: () -> Unit,
         _readDataFunc: (String) -> Unit
     ) :
@@ -43,15 +43,15 @@ class MainActivity : AppCompatActivity() {
         var checkList: MutableMap<Int, Boolean?> = HashMap()
 
         val ids:kotlin.collections.List<Int>
-        val dateAd: String = ""
         val db:SQLiteDatabase
-
+        var dateAd:String = ""
         var showDialogFunc:()->Unit
         var readDataFunc:(String)->Unit
 
         init {
             ids = _ids
             db=_db
+            dateAd = _dateAd
             showDialogFunc = _showDialogFunc
             readDataFunc = _readDataFunc
             // 初期値を設定する
