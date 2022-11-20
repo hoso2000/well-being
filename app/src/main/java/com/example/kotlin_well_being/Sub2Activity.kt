@@ -20,12 +20,14 @@ class Sub2Activity : AppCompatActivity()  {
 
         val sumText: TextView =  findViewById(R.id.sumText)
         var taskChecked = 0
+        var taskChecked2 = 0
+        var taskChecked3 = 0
         var rewardChecked = 0
         var sumTask = 0
         var sumReward = 0
         var sum = 0
         val cursor = db.query(
-            "testdb", arrayOf("date", "genre", "task", "reward", "taskChecker", "rewardChecker"),
+            "testdb", arrayOf("date", "genre", "task","genre2", "task2","genre3", "task3", "reward", "taskChecker","taskChecker2","taskChecker3", "rewardChecker"),
             null,
             null,
             null,
@@ -40,9 +42,13 @@ class Sub2Activity : AppCompatActivity()  {
             //データベース内を探索
             for (i in 0 until cursor.count  ) {
                 // 同じ日付を見つけたら呼び出して、終了
-                taskChecked = cursor.getInt(4)
+                taskChecked = cursor.getInt(8)
                 sumTask += taskChecked
-                rewardChecked = cursor.getInt(5)
+                taskChecked2 = cursor.getInt(9)
+                sumTask += taskChecked2
+                taskChecked3 = cursor.getInt(10)
+                sumTask += taskChecked3
+                rewardChecked = cursor.getInt(11)
                 sumReward += rewardChecked
                 cursor.moveToNext()
             }

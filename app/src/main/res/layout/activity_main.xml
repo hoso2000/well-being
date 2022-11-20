@@ -37,14 +37,13 @@
         android:layout_width="0dp"
         android:layout_height="66dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:text="ごほうび"
         android:textColor="@color/main"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task" />
+        app:layout_constraintTop_toBottomOf="@+id/task3" />
 
     <CheckBox
         android:id="@+id/task"
@@ -60,27 +59,23 @@
 
     <CheckBox
         android:id="@+id/task2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="184dp"
+        android:layout_width="160dp"
+        android:layout_height="44dp"
         android:checked="false"
         android:text="テスト2"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/taskName"
-        app:layout_constraintTop_toTopOf="@+id/taskName" />
+        app:layout_constraintStart_toStartOf="@+id/task"
+        app:layout_constraintTop_toBottomOf="@+id/task" />
 
     <CheckBox
         android:id="@+id/task3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="248dp"
+        android:layout_width="159dp"
+        android:layout_height="44dp"
         android:checked="false"
         android:text="test3"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/taskName"
-        app:layout_constraintTop_toTopOf="@+id/taskName" />
+        app:layout_constraintStart_toStartOf="@+id/task2"
+        app:layout_constraintTop_toBottomOf="@+id/task2" />
 
     <Button
         android:id="@+id/btnSend"
@@ -142,6 +137,7 @@
         app:layout_constraintHorizontal_bias="0.161"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reward"
+        app:layout_constraintVertical_bias="0.911"
         app:srcCompat="@drawable/good3" />
 
     <Button

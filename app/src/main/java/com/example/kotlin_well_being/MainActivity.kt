@@ -40,12 +40,6 @@ class MainActivity : AppCompatActivity() {
         val task:CheckBox = findViewById(R.id.task)
         val task2:CheckBox = findViewById(R.id.task2)
         val task3:CheckBox = findViewById(R.id.task3)
-        if(task2.text == " ") task2.visibility = View.VISIBLE else{
-            task2.visibility = View.INVISIBLE
-        }
-        if(task3.text == " ") task3.visibility = View.VISIBLE else{
-            task3.visibility = View.INVISIBLE
-        }
 
         val reward:CheckBox = findViewById(R.id.reward)
         val btnSend:Button = findViewById(R.id.btnSend)
@@ -93,7 +87,8 @@ class MainActivity : AppCompatActivity() {
             editor?.commit();
         }else{
             readData(date)
-            changeChar(task.isChecked, reward.isChecked)
+            taskVisible(task2,task3)
+            changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
 
         task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
@@ -121,7 +116,8 @@ class MainActivity : AppCompatActivity() {
             task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
             reward.isClickable = reward.text != "登録してください"
             reward.isClickable = task.isChecked
-            changeChar(task.isChecked, reward.isChecked)
+            taskVisible(task2,task3)
+            changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
 
         //タスクが終わったら褒めるアラート
@@ -142,7 +138,7 @@ class MainActivity : AppCompatActivity() {
             }
             insertTaskChecker(db,date,taskChecked)
             reward.isClickable = task.isChecked
-            changeChar(task.isChecked, reward.isChecked)
+            changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
         task2.setOnClickListener{
             if (task2.isChecked) {
@@ -161,7 +157,7 @@ class MainActivity : AppCompatActivity() {
             }
             insertTaskChecker2(db,date,taskChecked2)
             reward.isClickable = task.isChecked
-            changeChar(task.isChecked, reward.isChecked)
+            changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
         task3.setOnClickListener{
             if (task3.isChecked) {
@@ -180,7 +176,7 @@ class MainActivity : AppCompatActivity() {
             }
             insertTaskChecker3(db,date,taskChecked3)
             reward.isClickable = task.isChecked
-            changeChar(task.isChecked, reward.isChecked)
+            changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
 
         //ご褒美が終わったら褒めるアラート
@@ -199,7 +195,7 @@ class MainActivity : AppCompatActivity() {
                 rewardChecked = 0
             }
             insertRewardChecker(db,date,rewardChecked)
-            changeChar(task.isChecked, reward.isChecked)
+            changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
 
         //編集画面へ遷移
@@ -228,6 +224,8 @@ class MainActivity : AppCompatActivity() {
         val reward:CheckBox = findViewById(R.id.reward)
         test.text = date
         task.text = "登録してください"
+        task2.text = "選択してください　"
+        task3.text = "選択してください　"
         reward.text = "登録してください"
 
         var taskChecked = 0
@@ -308,14 +306,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     // task完了度によりキャラクターが変化
-    private fun changeChar(taskChecked: Boolean, rewardChecked: Boolean){
+    private fun changeChar(taskChecked: Boolean, taskChecked2: Boolean, taskChecked3: Boolean,  rewardChecked: Boolean){
         val myImage: ImageView = findViewById(R.id.imageView)
-        if (taskChecked && rewardChecked){
+        if (taskChecked && taskChecked2 && taskChecked3 && rewardChecked){
             myImage.setImageResource(R.drawable.good1)
-        }else if (taskChecked && !rewardChecked){
+        }else if (taskChecked && taskChecked2 && taskChecked3 && !rewardChecked){
             myImage.setImageResource(R.drawable.reward)
         }else{
             myImage.setImageResource(R.drawable.task)
+        }
+    }
+
+    private fun taskVisible(task2:CheckBox, task3: CheckBox){
+        if(task2.text != "選択してください　"){
+            task2.visibility = View.VISIBLE
+        } else{
+            task2.visibility = View.INVISIBLE
+            task2.isChecked = true
+        }
+        if(task3.text != "選択してください　"){
+            task3.visibility = View.VISIBLE
+        } else{
+            task3.visibility = View.INVISIBLE
+            task3.isChecked = true
+
         }
     }
 }

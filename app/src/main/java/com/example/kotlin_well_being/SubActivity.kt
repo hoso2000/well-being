@@ -104,25 +104,25 @@ class SubActivity : AppCompatActivity() {
         }
 
         // データを取得
-//        helper = TestOpenHelper(applicationContext)
-//        db = helper.readableDatabase
-//
-//        val cursor = db.query(
-//            "testdb", arrayOf("date", "genre", "task","genre2", "task2","genre3", "task3", "reward", "taskChecker","taskChecker2","taskChecker3", "rewardChecker"),
-//            "date == ?",
-//            arrayOf(getDate),
-//            null,
-//            null,
-//            null
-//        )
-//        if (cursor.count != 0) {
-//            cursor.moveToFirst()
-//            et1.setText(cursor.getString(2))
-//            et12.setText(cursor.getString(4))
-//            et13.setText(cursor.getString(6))
-//            et2.setText(cursor.getString(7))
-//            cursor.close()
-//        }
+        helper = TestOpenHelper(applicationContext)
+        db = helper.readableDatabase
+
+        val cursor = db.query(
+            "testdb", arrayOf("date", "genre", "task","genre2", "task2","genre3", "task3", "reward", "taskChecker","taskChecker2","taskChecker3", "rewardChecker"),
+            "date == ?",
+            arrayOf(getDate),
+            null,
+            null,
+            null
+        )
+        if (cursor.count != 0) {
+            cursor.moveToFirst()
+            et1.setText(cursor.getString(2))
+            et12.setText(cursor.getString(4))
+            et13.setText(cursor.getString(6))
+            et2.setText(cursor.getString(7))
+            cursor.close()
+        }
 
         //登録ボタン（アクティビティの終了）
         btnBack.setOnClickListener {
