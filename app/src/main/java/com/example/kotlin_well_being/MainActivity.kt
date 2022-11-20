@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -37,12 +38,23 @@ class MainActivity : AppCompatActivity() {
         var date = format.format(defaultDate)
 
         val task:CheckBox = findViewById(R.id.task)
+        val task2:CheckBox = findViewById(R.id.task2)
+        val task3:CheckBox = findViewById(R.id.task3)
+        if(task2.text == " ") task2.visibility = View.VISIBLE else{
+            task2.visibility = View.INVISIBLE
+        }
+        if(task3.text == " ") task3.visibility = View.VISIBLE else{
+            task3.visibility = View.INVISIBLE
+        }
+
         val reward:CheckBox = findViewById(R.id.reward)
         val btnSend:Button = findViewById(R.id.btnSend)
         // val ACbtn:View = findViewById(R.id.AcButton)
         val btnMemory:Button = findViewById(R.id.btnMemory)
 
         var taskChecked: Int
+        var taskChecked2: Int
+        var taskChecked3: Int
         var rewardChecked: Int
 
         // alertのランダムで表示されるメッセージと画像の配列
@@ -132,6 +144,44 @@ class MainActivity : AppCompatActivity() {
             reward.isClickable = task.isChecked
             changeChar(task.isChecked, reward.isChecked)
         }
+        task2.setOnClickListener{
+            if (task2.isChecked) {
+                taskChecked2 = 1
+                val image = ImageView(this)
+                image.setImageResource(taskImage.random())
+                AlertDialog.Builder(this).apply {
+                    setTitle("お疲れ様")
+                    setMessage(taskMessage.random())
+                    setView(image)
+                    setNegativeButton("OK",null)
+                    show()
+                }
+            }else{
+                taskChecked2 = 0
+            }
+            insertTaskChecker2(db,date,taskChecked2)
+            reward.isClickable = task.isChecked
+            changeChar(task.isChecked, reward.isChecked)
+        }
+        task3.setOnClickListener{
+            if (task3.isChecked) {
+                taskChecked3 = 1
+                val image = ImageView(this)
+                image.setImageResource(taskImage.random())
+                AlertDialog.Builder(this).apply {
+                    setTitle("お疲れ様")
+                    setMessage(taskMessage.random())
+                    setView(image)
+                    setNegativeButton("OK",null)
+                    show()
+                }
+            }else{
+                taskChecked3 = 0
+            }
+            insertTaskChecker3(db,date,taskChecked3)
+            reward.isClickable = task.isChecked
+            changeChar(task.isChecked, reward.isChecked)
+        }
 
         //ご褒美が終わったら褒めるアラート
         reward.setOnClickListener{
@@ -173,16 +223,20 @@ class MainActivity : AppCompatActivity() {
 
         val test:TextView = findViewById(R.id.testView)
         val task:CheckBox = findViewById(R.id.task)
+        val task2:CheckBox = findViewById(R.id.task2)
+        val task3:CheckBox = findViewById(R.id.task3)
         val reward:CheckBox = findViewById(R.id.reward)
         test.text = date
         task.text = "登録してください"
         reward.text = "登録してください"
 
         var taskChecked = 0
+        var taskChecked2 = 0
+        var taskChecked3 = 0
         var rewardChecked = 0
 
         val cursor = db.query(
-            "testdb", arrayOf("date", "genre", "task", "reward", "taskChecker", "rewardChecker"),
+            "testdb", arrayOf("date", "genre", "task","genre2", "task2","genre3", "task3", "reward", "taskChecker","taskChecker2","taskChecker3", "rewardChecker"),
             null,
             null,
             null,
@@ -200,14 +254,20 @@ class MainActivity : AppCompatActivity() {
                     //　taskとやりたいことを挿入
                     test.text = cursor.getString(0)
                     task.text = cursor.getString(1) + "　" + cursor.getString(2)
-                    reward.text = cursor.getString(3)
-                    taskChecked = cursor.getInt(4)
-                    rewardChecked = cursor.getInt(5)
+                    task2.text = cursor.getString(3) + "　" + cursor.getString(4)
+                    task3.text = cursor.getString(5) + "　" + cursor.getString(6)
+                    reward.text = cursor.getString(7)
+                    taskChecked = cursor.getInt(8)
+                    taskChecked2 = cursor.getInt(9)
+                    taskChecked3 = cursor.getInt(10)
+                    rewardChecked = cursor.getInt(11)
                     break
                 }
                 cursor.moveToNext()
             }
             task.isChecked = taskChecked == 1
+            task2.isChecked = taskChecked2 == 1
+            task3.isChecked = taskChecked3 == 1
             reward.isChecked = rewardChecked == 1
         }
         cursor.close()
@@ -218,6 +278,22 @@ class MainActivity : AppCompatActivity() {
         val values = ContentValues()
 
         values.put("taskChecker", taskChecker)
+        //db.insert("testdb", null, values)
+        db.update("testdb", values, "date = ?", arrayOf(dateData))
+    }
+
+    private fun insertTaskChecker2(db: SQLiteDatabase, dateData: String?, taskChecker2: Int) {
+        val values = ContentValues()
+
+        values.put("taskChecker2", taskChecker2)
+        //db.insert("testdb", null, values)
+        db.update("testdb", values, "date = ?", arrayOf(dateData))
+    }
+
+    private fun insertTaskChecker3(db: SQLiteDatabase, dateData: String?, taskChecker3: Int) {
+        val values = ContentValues()
+
+        values.put("taskChecker3", taskChecker3)
         //db.insert("testdb", null, values)
         db.update("testdb", values, "date = ?", arrayOf(dateData))
     }
