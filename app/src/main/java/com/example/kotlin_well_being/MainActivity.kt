@@ -30,6 +30,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // カレンダー関連
+        val format = SimpleDateFormat("yyyy/MM/d", Locale.US)
+        val calendarView:CalendarView = findViewById(R.id.calendarView)
+        val defaultDate = calendarView.date
+        var date = format.format(defaultDate)
+
+        val task:CheckBox = findViewById(R.id.task)
+        val reward:CheckBox = findViewById(R.id.reward)
+        val btnSend:Button = findViewById(R.id.btnSend)
+        // val ACbtn:View = findViewById(R.id.AcButton)
+        val btnMemory:Button = findViewById(R.id.btnMemory)
+
+        var taskChecked: Int
+        var rewardChecked: Int
+
+        // alertのランダムで表示されるメッセージと画像の配列
+        val taskMessage = arrayOf("お疲れ様！よく頑張ったね","流石だね！","今日も目標達成できてえらい！")
+        val rewardMessage = arrayOf("楽しい一日になったね","充実した一日になったね","明日もこの調子で頑張ろう！")
+        val taskImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
+        val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
+
         preference = getSharedPreferences("Preference Name", MODE_PRIVATE)
         editor = preference?.edit()
 
@@ -58,35 +79,14 @@ class MainActivity : AppCompatActivity() {
             //プリファレンスの書き変え
             editor?.putBoolean("Launched", true);
             editor?.commit();
+        }else{
+            readData(date)
+            changeChar(task.isChecked, reward.isChecked)
         }
 
-        // カレンダー関連
-        val format = SimpleDateFormat("yyyy/MM/d", Locale.US)
-        val calendarView:CalendarView = findViewById(R.id.calendarView)
-        val defaultDate = calendarView.date
-        var date = format.format(defaultDate)
-
-        val task:CheckBox = findViewById(R.id.task)
-        val reward:CheckBox = findViewById(R.id.reward)
-        val btnSend:Button = findViewById(R.id.btnSend)
-        // val ACbtn:View = findViewById(R.id.AcButton)
-        val btnMemory:Button = findViewById(R.id.btnMemory)
-
-        var taskChecked: Int
-        var rewardChecked: Int
-
-        // alertのランダムで表示されるメッセージと画像の配列
-        val taskMessage = arrayOf("お疲れ様！よく頑張ったね","流石だね！","今日も目標達成できてえらい！")
-        val rewardMessage = arrayOf("楽しい一日になったね","充実した一日になったね","明日もこの調子で頑張ろう！")
-        val taskImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
-        val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
-
-        readData(date)
         task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
         reward.isClickable = reward.text != "登録してください"
         reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
-
-        changeChar(task.isChecked, reward.isChecked)
 
 //        alarmMgr?.setRepeating(
 //            AlarmManager.ELAPSED_REALTIME_WAKEUP,
