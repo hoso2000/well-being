@@ -18,17 +18,19 @@
     <!--        app:layout_constraintTop_toBottomOf="@+id/calendarView"-->
     <!--        app:layout_constraintVertical_bias="0.243">-->
 
+
     <CalendarView
         android:id="@+id/calendarView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="329dp"
+        android:layout_height="293dp"
         android:focusedMonthDateColor="@color/blue"
-        android:scrollbarSize="2dp"
+        android:scrollbarSize="4dp"
+        android:textAlignment="textStart"
+        android:textDirection="rtl"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        tools:layout_editor_absoluteY="-20dp" />
 
     <LinearLayout
         android:id="@+id/LinearLayout"
@@ -57,7 +59,7 @@
         android:id="@+id/btnSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
+        android:layout_marginEnd="84dp"
         android:layout_marginBottom="1dp"
         android:text="登録"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -82,8 +84,6 @@
         android:text="タスク"
         android:textColor="@color/main"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.326"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendarView" />
 
@@ -92,13 +92,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:text="ご褒美"
         android:textColor="@color/main"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LinearLayout" />
 
     <TextView
         android:id="@+id/testView"
@@ -118,7 +119,10 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/btnMemory"
         app:layout_constraintEnd_toEndOf="@+id/LinearLayout"
-        app:layout_constraintStart_toStartOf="@+id/LinearLayout">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/LinearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/rewardName"
+        app:layout_constraintVertical_bias="0.0">
 
         <CheckBox
             android:id="@+id/rewardCheck"
@@ -154,3 +158,179 @@
 
     <!--    </ScrollView>-->
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/constraint"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".MainActivity">-->
+
+<!--    <CalendarView-->
+<!--        android:id="@+id/calendarView"-->
+<!--        android:layout_width="301dp"-->
+<!--        android:layout_height="296dp"-->
+<!--        android:focusedMonthDateColor="@color/blue"-->
+<!--        android:scrollbarSize="4dp"-->
+<!--        android:textAlignment="textStart"-->
+<!--        android:textDirection="rtl"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.491"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <ScrollView-->
+<!--        android:id="@+id/scrollView"-->
+<!--        android:layout_width="372dp"-->
+<!--        android:layout_height="544dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/btnSend"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.355"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/calendarView">-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/LinearLayoutMain"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="fill_parent"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="61dp"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/taskName"-->
+<!--                    android:layout_width="213dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:text="タスク"-->
+<!--                    android:textColor="@color/main"-->
+<!--                    android:textSize="24sp"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/calendarView" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/testView"-->
+<!--                    android:layout_width="84dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:layout_marginEnd="56dp"-->
+<!--                    android:text="TestView"-->
+<!--                    app:layout_constraintEnd_toEndOf="@+id/taskName"-->
+<!--                    app:layout_constraintTop_toTopOf="@+id/taskName" />-->
+
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/LinearLayout"-->
+<!--                android:layout_width="390dp"-->
+<!--                android:layout_height="137dp"-->
+<!--                android:layout_marginStart="2dp"-->
+<!--                android:orientation="vertical"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.529"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/taskName"-->
+<!--                app:layout_constraintVertical_bias="0.0">-->
+
+
+<!--                <ListView-->
+<!--                    android:id="@+id/listView"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/task" />-->
+
+<!--            </LinearLayout>-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/rewardName"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="ご褒美"-->
+<!--                android:textColor="@color/main"-->
+<!--                android:textSize="24sp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.0"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/LinearLayout" />-->
+
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/linearLayout"-->
+<!--                android:layout_width="397dp"-->
+<!--                android:layout_height="89dp"-->
+<!--                android:orientation="horizontal"-->
+<!--                app:layout_constraintBottom_toTopOf="@+id/btnMemory"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/LinearLayout"-->
+<!--                app:layout_constraintHorizontal_bias="0.0"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/LinearLayout"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/rewardName"-->
+<!--                app:layout_constraintVertical_bias="0.0">-->
+
+<!--                <CheckBox-->
+<!--                    android:id="@+id/rewardCheck"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="20dp"-->
+<!--                    android:layout_marginTop="6dp"-->
+<!--                    android:layout_marginBottom="6dp" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/rewardText"-->
+<!--                    android:layout_width="138dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:layout_marginLeft="20dp"-->
+<!--                    android:layout_marginTop="6dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:text="TextView" />-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageView"-->
+<!--                    android:layout_width="131dp"-->
+<!--                    android:layout_height="93dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:layout_marginBottom="24dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/LinearLayout"-->
+<!--                    app:layout_constraintVertical_bias="0.706"-->
+<!--                    app:srcCompat="@drawable/good3" />-->
+
+<!--            </LinearLayout>-->
+
+<!--        </LinearLayout>-->
+<!--    </ScrollView>-->
+
+<!--    <Button-->
+<!--        android:id="@+id/btnSend"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="64dp"-->
+<!--        android:layout_marginBottom="1dp"-->
+<!--        android:text="登録"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/btnMemory"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginStart="64dp"-->
+<!--        android:layout_marginBottom="1dp"-->
+<!--        android:text="記録"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/btnSend" />-->
+
+
+<!--    &lt;!&ndash;    </ScrollView>&ndash;&gt;-->
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

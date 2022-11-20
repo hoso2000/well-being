@@ -59,7 +59,7 @@ class Sub2Activity : AppCompatActivity()  {
         if (cursor2.count != 0) {
             cursor2.moveToFirst()
             //データベース内を探索
-            for (i in 0 until cursor.count  ) {
+            for (i in 0 until cursor2.count  ) {
                 // 同じ日付を見つけたら呼び出して、終了
                 rewardChecked = cursor2.getInt(3)
                 sumReward += rewardChecked

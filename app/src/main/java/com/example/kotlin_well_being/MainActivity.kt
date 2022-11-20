@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private val TO = intArrayOf(R.id.listTextView, R.id.listCheckBox)
     private val list: MutableList<MutableMap<String?, Any>?> = ArrayList()
 
+    private var imageCheker:Boolean = false
+
     private class MyAdapter(
         context: Context?, data: MutableList<MutableMap<String?, Any>?>,
         resource: Int, from: Array<String>, to: IntArray?, _ids: List<Int>, _dateAd: String, _db: SQLiteDatabase,
@@ -100,6 +102,27 @@ class MainActivity : AppCompatActivity() {
         preference = getSharedPreferences("Preference Name", MODE_PRIVATE)
         editor = preference?.edit()
 
+        // カレンダー関連
+        val format = SimpleDateFormat("yyyy/M/d", Locale.US)
+        val calendarView:CalendarView = findViewById(R.id.calendarView)
+        val defaultDate = calendarView.date
+        var date = format.format(defaultDate)
+
+        val rewardCheckBox:CheckBox = findViewById(R.id.rewardCheck)
+        val rewardText:TextView = findViewById(R.id.rewardText)
+        val btnSend:Button = findViewById(R.id.btnSend)
+        val btnMemory:Button = findViewById(R.id.btnMemory)
+
+        var taskChecked: Int
+        var rewardChecked: Int = 0
+
+        // alertのランダムで表示されるメッセージと画像の配列
+        val rewardMessage = arrayOf("楽しい一日になったね","充実した一日になったね","明日もこの調子で頑張ろう！")
+        val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
+        rewardCheckBox.isClickable = rewardText.text != "登録してください"
+        //reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
+
+
         // 初回起動時のみの処理
         if (preference?.getBoolean("Launched", false)==false) {
             //初回起動時の処理
@@ -125,31 +148,10 @@ class MainActivity : AppCompatActivity() {
             //プリファレンスの書き変え
             editor?.putBoolean("Launched", true);
             editor?.commit();
+        }else{
+            readData(date)
+            changeChar(rewardCheckBox.isChecked)
         }
-
-        // カレンダー関連
-        val format = SimpleDateFormat("yyyy/MM/d", Locale.US)
-        val calendarView:CalendarView = findViewById(R.id.calendarView)
-        val defaultDate = calendarView.date
-        var date = format.format(defaultDate)
-
-        val rewardCheckBox:CheckBox = findViewById(R.id.rewardCheck)
-        val rewardText:TextView = findViewById(R.id.rewardText)
-        val btnSend:Button = findViewById(R.id.btnSend)
-        val btnMemory:Button = findViewById(R.id.btnMemory)
-
-        var taskChecked: Int
-        var rewardChecked: Int
-
-        // alertのランダムで表示されるメッセージと画像の配列
-        val rewardMessage = arrayOf("楽しい一日になったね","充実した一日になったね","明日もこの調子で頑張ろう！")
-        val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
-
-        readData(date)
-        rewardCheckBox.isClickable = rewardText.text != "登録してください"
-        //reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
-
-        //changeChar(task.isChecked, reward.isChecked)
 
 //        alarmMgr?.setRepeating(
 //            AlarmManager.ELAPSED_REALTIME_WAKEUP,
@@ -172,7 +174,7 @@ class MainActivity : AppCompatActivity() {
             //task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
             rewardCheckBox.isClickable = rewardText.text != "登録してください"
             //reward.isClickable = task.isChecked
-            //changeChar(task.isChecked, reward.isChecked)
+            changeChar(rewardCheckBox.isChecked)
         }
 
         //ご褒美が終わったら褒めるアラート
@@ -191,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                 rewardChecked = 0
             }
             insertRewardChecker(db,id,rewardChecked)
-            //changeChar(task.isChecked, reward.isChecked)
+            changeChar(rewardCheckBox.isChecked)
         }
 
         //編集画面へ遷移
@@ -251,6 +253,7 @@ class MainActivity : AppCompatActivity() {
         //初起動時DBの要素ゼロで実行されるのを防止するため
         val ids = mutableListOf<Int>()
         if (cursor.count != 0) {
+            imageCheker = true
             cursor.moveToFirst()
             dateText.text = cursor.getString(1)
             dateAd = cursor.getString(1)
@@ -264,6 +267,9 @@ class MainActivity : AppCompatActivity() {
                 taskChecked = cursor.getInt(4)
                 vmap["check"] = taskChecked == 1
                 list.add(vmap)
+                if (taskChecked == 0){
+                    imageCheker = false
+                }
                 if (i != cursor.count) {
                     cursor.moveToNext()
                 }
@@ -304,15 +310,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     // task完了度によりキャラクターが変化
-    private fun changeChar(taskChecked: Boolean, rewardChecked: Boolean){
+    private fun changeChar(rewardChecked: Boolean){
         val myImage: ImageView = findViewById(R.id.imageView)
-//        if (taskChecked && rewardChecked){
-//            myImage.setImageResource(R.drawable.good1)
-//        }else if (taskChecked && !rewardChecked){
-//            myImage.setImageResource(R.drawable.reward)
-//        }else{
-//            myImage.setImageResource(R.drawable.task)
-//        }
+        if (imageCheker && rewardChecked){
+            myImage.setImageResource(R.drawable.good1)
+        }else if (imageCheker && !rewardChecked){
+            myImage.setImageResource(R.drawable.reward)
+        }else{
+            myImage.setImageResource(R.drawable.task)
+        }
     }
 
     private fun showDialog(){
