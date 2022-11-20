@@ -66,8 +66,8 @@ class MainActivity : AppCompatActivity() {
             // 時間指定で通知する
             val calendar: Calendar = Calendar.getInstance().apply {
                 timeInMillis = System.currentTimeMillis()
-                set(Calendar.HOUR_OF_DAY, 13)
-                set(Calendar.MINUTE, 30)
+                set(Calendar.HOUR_OF_DAY, 3)
+                set(Calendar.MINUTE, 50)
             }
             alarmMgr?.setRepeating(
                 AlarmManager.RTC_WAKEUP,
