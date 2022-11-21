@@ -14,7 +14,7 @@ class SubActivity : AppCompatActivity() {
     private lateinit var helper: TestOpenHelper
     private lateinit var db: SQLiteDatabase
 
-    private val spinnerItems = arrayOf("授業", "課題", "勉強", "研究・ゼミ", "バイト", "部活・サークル", "プロジェクト活動", "就活", "家事", "その他")
+//    val spinnerItems = arrayOf("選択してください","授業", "課題", "勉強", "研究・ゼミ", "バイト", "部活・サークル", "プロジェクト活動", "就活", "家事", "その他")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +26,8 @@ class SubActivity : AppCompatActivity() {
         val et12 :EditText = findViewById(R.id.editText1_2)
         val et13 :EditText = findViewById(R.id.editText1_3)
         val et2 :EditText = findViewById(R.id.editText2)
+        val btnDelete2 :ImageButton = findViewById(R.id.btnDelete2)
+        val btnDelete3 :ImageButton = findViewById(R.id.btnDelete3)
         val isChecked = 0
         val isChecked12 = 0
         val isChecked13 = 0
@@ -33,10 +35,39 @@ class SubActivity : AppCompatActivity() {
         var spinnerText = ""
         var spinnerText2 = ""
         var spinnerText3 = ""
-
+        val spinnerItems = mutableListOf<String>("選択してください","授業", "課題", "勉強", "研究・ゼミ", "バイト", "部活・サークル", "プロジェクト活動", "就活", "家事", "その他")
+        val spinnerItems2 = mutableListOf<String>("選択してください","授業", "課題", "勉強", "研究・ゼミ", "バイト", "部活・サークル", "プロジェクト活動", "就活", "家事", "その他")
+        val spinnerItems3 = mutableListOf<String>("選択してください","授業", "課題", "勉強", "研究・ゼミ", "バイト", "部活・サークル", "プロジェクト活動", "就活", "家事", "その他")
         // 日付を取得
         val getDate = intent.getStringExtra("DATE_KEY")
         textDate.text = getDate
+
+        // データを取得
+        helper = TestOpenHelper(applicationContext)
+        db = helper.readableDatabase
+
+        val cursor = db.query(
+            "testdb", arrayOf("date", "genre", "task","genre2", "task2","genre3", "task3", "reward", "taskChecker","taskChecker2","taskChecker3", "rewardChecker"),
+            "date == ?",
+            arrayOf(getDate),
+            null,
+            null,
+            null
+        )
+        if (cursor.count != 0) {
+            cursor.moveToFirst()
+            spinnerItems.removeAt(0)
+            spinnerItems2.removeAt(0)
+            spinnerItems3.removeAt(0)
+            spinnerItems.add(0,cursor.getString(1))
+            et1.setText(cursor.getString(2))
+            spinnerItems2.add(0,cursor.getString(3))
+            et12.setText(cursor.getString(4))
+            spinnerItems3.add(0,cursor.getString(5))
+            et13.setText(cursor.getString(6))
+            et2.setText(cursor.getString(7))
+            cursor.close()
+        }
 
         val spinner = findViewById<Spinner>(R.id.spinner)
         val spinner2 = findViewById<Spinner>(R.id.spinner2)
@@ -45,17 +76,29 @@ class SubActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(
             this,
             R.layout.custom_spinner,
-            resources.getStringArray(R.array.list)
+            spinnerItems
+        )
+        val adapter2 = ArrayAdapter(
+            this,
+            R.layout.custom_spinner,
+            spinnerItems2
+        )
+        val adapter3 = ArrayAdapter(
+            this,
+            R.layout.custom_spinner,
+            spinnerItems3
         )
         adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
+        adapter2.setDropDownViewResource(R.layout.custom_spinner_dropdown)
+        adapter3.setDropDownViewResource(R.layout.custom_spinner_dropdown)
         spinner.adapter = adapter
-        spinner2.adapter = adapter
-        spinner3.adapter = adapter
+        spinner2.adapter = adapter2
+        spinner3.adapter = adapter3
+
 //        val adapter = ArrayAdapter(this, android.R.layout., spinnerItems)
 //        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 //        spinner.adapter = adapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
             // 項目が選択された時に呼ばれる
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -103,26 +146,24 @@ class SubActivity : AppCompatActivity() {
             }
         }
 
-        // データを取得
-        helper = TestOpenHelper(applicationContext)
-        db = helper.readableDatabase
-
-        val cursor = db.query(
-            "testdb", arrayOf("date", "genre", "task","genre2", "task2","genre3", "task3", "reward", "taskChecker","taskChecker2","taskChecker3", "rewardChecker"),
-            "date == ?",
-            arrayOf(getDate),
-            null,
-            null,
-            null
-        )
-        if (cursor.count != 0) {
-            cursor.moveToFirst()
-            et1.setText(cursor.getString(2))
-            et12.setText(cursor.getString(4))
-            et13.setText(cursor.getString(6))
-            et2.setText(cursor.getString(7))
-            cursor.close()
+        //削除ボタン2段目
+        btnDelete2.setOnClickListener {
+            et12.setText("")
+            spinnerItems2.removeAt(0)
+            spinnerItems2.add(0,"選択してください")
+            spinnerText2 = "選択してください"
+            val toast = Toast.makeText(this, "タスク2を削除しました。", Toast.LENGTH_SHORT)
+            toast.show()
         }
+        btnDelete3.setOnClickListener {
+            et13.setText("")
+            spinnerItems3.removeAt(0)
+            spinnerItems3.add(0,"選択してください")
+            spinnerText3 = "選択してください"
+            val toast = Toast.makeText(this, "タスク3を削除しました。", Toast.LENGTH_SHORT)
+            toast.show()
+        }
+
 
         //登録ボタン（アクティビティの終了）
         btnBack.setOnClickListener {

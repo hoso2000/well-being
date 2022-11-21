@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
 
         val reward:CheckBox = findViewById(R.id.reward)
         val btnSend:Button = findViewById(R.id.btnSend)
-        // val ACbtn:View = findViewById(R.id.AcButton)
         val btnMemory:Button = findViewById(R.id.btnMemory)
 
         var taskChecked: Int
@@ -72,8 +71,8 @@ class MainActivity : AppCompatActivity() {
             // 時間指定で通知する
             val calendar: Calendar = Calendar.getInstance().apply {
                 timeInMillis = System.currentTimeMillis()
-                set(Calendar.HOUR_OF_DAY, 3)
-                set(Calendar.MINUTE, 50)
+                set(Calendar.HOUR_OF_DAY, 18)
+                set(Calendar.MINUTE, 30)
             }
             alarmMgr?.setRepeating(
                 AlarmManager.RTC_WAKEUP,
@@ -82,18 +81,19 @@ class MainActivity : AppCompatActivity() {
                 //1000 * 60 * 15,
                 alarmIntent
             )
+
+            //insertFirst(db)
             //プリファレンスの書き変え
             editor?.putBoolean("Launched", true);
             editor?.commit();
-        }else{
-            readData(date)
-            taskVisible(task2,task3)
-            changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
+        readData(date)
+        taskVisible(task2,task3)
+        changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
 
         task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
         reward.isClickable = reward.text != "登録してください"
-        reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
+        //reward.isClickable = task.isChecked //taskが終わらないとrewardを押せない
 
 //        alarmMgr?.setRepeating(
 //            AlarmManager.ELAPSED_REALTIME_WAKEUP,
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             readData(date)
             task.isClickable = task.text != "登録してください"  //初期状態でチェックは付けられない
             reward.isClickable = reward.text != "登録してください"
-            reward.isClickable = task.isChecked
+            //reward.isClickable = task.isChecked
             taskVisible(task2,task3)
             changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
                 taskChecked = 0
             }
             insertTaskChecker(db,date,taskChecked)
-            reward.isClickable = task.isChecked
+            //reward.isClickable = task.isChecked
             changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
         task2.setOnClickListener{
@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity() {
                 taskChecked2 = 0
             }
             insertTaskChecker2(db,date,taskChecked2)
-            reward.isClickable = task.isChecked
+            // reward.isClickable = task.isChecked
             changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
         task3.setOnClickListener{
@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
                 taskChecked3 = 0
             }
             insertTaskChecker3(db,date,taskChecked3)
-            reward.isClickable = task.isChecked
+            // reward.isClickable = task.isChecked
             changeChar(task.isChecked,task2.isChecked, task3.isChecked, reward.isChecked)
         }
 
@@ -296,6 +296,23 @@ class MainActivity : AppCompatActivity() {
         db.update("testdb", values, "date = ?", arrayOf(dateData))
     }
 
+//    private fun insertFirst(db: SQLiteDatabase) {
+//        val values = ContentValues()
+//        values.put("date", "2022/11/21")
+//        values.put("genre", "その他")
+//        values.put("task", "s")
+//        values.put("genre2", "s")
+//        values.put("task2", "s")
+//        values.put("genre3", "s")
+//        values.put("task3", "s")
+//        values.put("reward", "s")
+//        values.put("taskChecker", 1)
+//        values.put("taskChecker2", 1)
+//        values.put("taskChecker3", 1)
+//        values.put("rewardChecker", 1)
+//        db.insert("testdb", null, values)
+//    }
+
     // reward checkboxを登録
     private fun insertRewardChecker(db: SQLiteDatabase, dateData: String?, rewardChecker: Int) {
         val values = ContentValues()
@@ -321,13 +338,13 @@ class MainActivity : AppCompatActivity() {
         if(task2.text != "選択してください　"){
             task2.visibility = View.VISIBLE
         } else{
-            task2.visibility = View.INVISIBLE
+            task2.visibility = View.GONE
             task2.isChecked = true
         }
         if(task3.text != "選択してください　"){
             task3.visibility = View.VISIBLE
         } else{
-            task3.visibility = View.INVISIBLE
+            task3.visibility = View.GONE
             task3.isChecked = true
 
         }
