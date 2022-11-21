@@ -234,12 +234,12 @@ class MainActivity : AppCompatActivity() {
     // task完了度によりキャラクターが変化
     private fun changeChar(taskChecked: Boolean, rewardChecked: Boolean){
         val myImage: ImageView = findViewById(R.id.imageView)
-        if (taskChecked && rewardChecked){
-            myImage.setImageResource(R.drawable.good1)
-        }else if (taskChecked && !rewardChecked){
-            myImage.setImageResource(R.drawable.reward)
-        }else{
-            myImage.setImageResource(R.drawable.task)
-        }
+//        if (taskChecked && rewardChecked){
+//            myImage.setImageResource(R.drawable.good1)
+//        }else if (taskChecked && !rewardChecked){
+//            myImage.setImageResource(R.drawable.reward)
+//        }else{
+//            myImage.setImageResource(R.drawable.task)
+//        }
     }
 }
