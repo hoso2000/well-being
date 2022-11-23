@@ -51,8 +51,8 @@ class MainActivity : AppCompatActivity() {
         var rewardChecked: Int
 
         // alertのランダムで表示されるメッセージと画像の配列
-        val taskMessage = arrayOf("お疲れ様！よく頑張ったね","流石だね！","今日も目標達成できてえらい！")
-        val rewardMessage = arrayOf("楽しい一日になったね","充実した一日になったね","明日もこの調子で頑張ろう！")
+        val taskMessage = arrayOf("お疲れ様！よく頑張ったね","流石だね！","今日も目標達成できてえらい！","優秀だね～","いつも応援しているよ！","最高だね！！")
+        val rewardMessage = arrayOf("楽しい一日になったね","充実した一日になったね","明日もこの調子で頑張ろう！","今日も完璧！")
         val taskImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
         val rewardImage = arrayOf(R.drawable.good1,R.drawable.good2,R.drawable.good3,R.drawable.good4,R.drawable.good5,R.drawable.good6,R.drawable.good7)
 
@@ -329,7 +329,8 @@ class MainActivity : AppCompatActivity() {
             myImage.setImageResource(R.drawable.good1)
         }else if (taskChecked && taskChecked2 && taskChecked3 && !rewardChecked){
             myImage.setImageResource(R.drawable.reward)
-        }else{
+        }
+        else{
             myImage.setImageResource(R.drawable.task)
         }
     }

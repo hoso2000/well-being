@@ -71,7 +71,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         if (task == "授業") {
             contentTitle = "授業"
-            contentText = "午後の授業も頑張ろう！"
+            contentText = "タスクが達成出来たらチェックをつけに行こう！"
         } else if(task == "課題") {
             contentTitle = "課題"
             contentText = "まずは机に向かってみよう！"
@@ -99,7 +99,7 @@ class AlarmReceiver : BroadcastReceiver() {
         }
         if (taskChecked == 1){
             contentTitle="お疲れ様"
-            contentText="あとは好きなことを楽しもう"
+            contentText="好きなことを楽しもう"
         }
 
 
