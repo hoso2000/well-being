@@ -59,32 +59,32 @@ class Sub2Activity : AppCompatActivity()  {
 
         val myImage: ImageView = findViewById(R.id.imageView)
         // 2週間パターン
-//        if (sum <= 4){
-//            myImage.setImageResource(R.drawable.f0)
-//        }else if (5 <= sum && sum <= 8){
-//            myImage.setImageResource(R.drawable.f1)
-//        }else if (9 <= sum && sum <= 14) {
-//            myImage.setImageResource(R.drawable.f2)
-//        }else if (13 <= sum && sum <= 20) {
-//            myImage.setImageResource(R.drawable.f3)
-//        }
-//        else{
-//            myImage.setImageResource(R.drawable.f4)
-//        }
-
-        // 1週間パターン
-        if (sum <= 2){
+        if (sum <= 4){
             myImage.setImageResource(R.drawable.f0)
-        }else if (4 <= sum && sum <= 5){
+        }else if (5 <= sum && sum <= 8){
             myImage.setImageResource(R.drawable.f1)
-        }else if (6 <= sum && sum <= 7) {
+        }else if (9 <= sum && sum <= 14) {
             myImage.setImageResource(R.drawable.f2)
-        }else if (8 <= sum && sum <= 11) {
+        }else if (13 <= sum && sum <= 20) {
             myImage.setImageResource(R.drawable.f3)
         }
         else{
             myImage.setImageResource(R.drawable.f4)
         }
+
+        // 1週間パターン
+//        if (sum <= 2){
+//            myImage.setImageResource(R.drawable.f0)
+//        }else if (4 <= sum && sum <= 5){
+//            myImage.setImageResource(R.drawable.f1)
+//        }else if (6 <= sum && sum <= 7) {
+//            myImage.setImageResource(R.drawable.f2)
+//        }else if (8 <= sum && sum <= 11) {
+//            myImage.setImageResource(R.drawable.f3)
+//        }
+//        else{
+//            myImage.setImageResource(R.drawable.f4)
+//        }
 
         btnBack2.setOnClickListener {
             finish()

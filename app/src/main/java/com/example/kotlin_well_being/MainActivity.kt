@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     private var alarmMgr: AlarmManager? = null
     private lateinit var alarmIntent: PendingIntent
 
+    override fun onBackPressed() {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
