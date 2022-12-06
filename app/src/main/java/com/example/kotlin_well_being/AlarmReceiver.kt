@@ -21,8 +21,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
-        val toast = Toast.makeText(context, "アラームによる処理が実行されました。", Toast.LENGTH_SHORT)
-        toast.show()
+//        val toast = Toast.makeText(context, "アラームによる処理が実行されました。", Toast.LENGTH_SHORT)
+//        toast.show()
         val CHANNEL_ID = "channel_id"
         val channel_name = "channel_name"
         val channel_description = "channel_description "
@@ -71,7 +71,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         if (task == "授業") {
             contentTitle = "授業"
-            contentText = "午後の授業も頑張ろう！"
+            contentText = "タスクが達成出来たらチェックをつけに行こう！"
         } else if(task == "課題") {
             contentTitle = "課題"
             contentText = "まずは机に向かってみよう！"
@@ -95,11 +95,11 @@ class AlarmReceiver : BroadcastReceiver() {
             contentText = "目の前の片付けから始めてみよう！"
         }else {
             contentTitle = "タスク"
-            contentText = "お疲れ様！午後も頑張ろう！"
+            contentText = "お疲れ様！無理せずに頑張ってね！"
         }
         if (taskChecked == 1){
             contentTitle="お疲れ様"
-            contentText="あとは好きなことを楽しもう"
+            contentText="好きなことを楽しもう"
         }
 
 
